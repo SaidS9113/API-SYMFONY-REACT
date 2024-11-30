@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoriesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ORM\Entity(repositoryClass: CategoriesRepository::class)]
+#[ApiResource]
 class Categorie
 {
     #[ORM\Id]
