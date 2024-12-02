@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
+#[ORM\Entity]
+#[ORM\Table(name: "categorie")]
 class Categorie
 {
     #[ORM\Id]

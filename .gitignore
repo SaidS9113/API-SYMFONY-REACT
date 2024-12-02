@@ -8,5 +8,4 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-!/front-end-react/
-!/front-end-react/*
+
