@@ -5,10 +5,10 @@ function ListeProduit() {
     const [produits, setProduits] = useState([]); 
 
     useEffect(() => {
-        api.get('/produits')
+        api.get('/product')
             .then(response => {
                 console.log("Réponse API complète :", response.data);
-                const produitsData = response.data['member'] || []; 
+                const produitsData = response.data || []; 
                 setProduits(produitsData);
                 console.log("Produits récupérés :", produitsData);
             })
