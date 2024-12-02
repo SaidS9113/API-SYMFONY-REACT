@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import ListeProduit from "./components/ListeProduit";
 import './assets/css/style.css';
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
        <Header/>
        </header>
        <main >
-       
+       <ListeProduit/>
        </main>
       
        <footer>
