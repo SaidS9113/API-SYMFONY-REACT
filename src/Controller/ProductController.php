@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 use App\Entity\Produit;
+use App\Entity\Categorie;
 use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,31 +39,41 @@ class ProductController extends AbstractController
         }
     }
 
-    #[Route('/api/add-produit', name: 'add_produit', methods: ['POST'])]
+    #[Route('/api/add-product', name: 'app_add-product', methods: ['POST'])]
     public function addProduit(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Récupère les données envoyées en JSON
-        $data = json_decode($request->getContent(), true);
-
-        // Validation simple
-        if (!isset($data['nom'], $data['prix'])) {
-            return $this->json(['error' => 'Nom et prix sont requis'], 400);
+        try {
+           
+            $data = json_decode($request->getContent(), true);
+    
+       
+            if (!isset($data['nom'], $data['prix'], $data['categorie'])) {
+                return $this->json(['error' => 'Nom, prix et catégorie sont requis'], 400);
+            }
+    
+    
+            $categorie = $entityManager->getRepository(Categorie::class)->find($data['categorie']);
+            if (!$categorie) {
+                return $this->json(['error' => 'Catégorie invalide'], 400);
+            }
+    
+            $produit = new Produit();
+            $produit->setNom($data['nom'])
+                ->setPrix($data['prix'])
+                ->setDescription($data['description'] ?? null)
+                ->setDateCreation(new \DateTime())
+                ->setCategorie($categorie);
+    
+            
+            $entityManager->persist($produit);
+            $entityManager->flush();
+    
+            return $this->json([
+                'message' => 'Produit ajouté avec succès',
+                'id' => $produit->getId(),
+            ], 201);
+        } catch (Exception $e) {
+            dd($e); 
         }
-
-        // Crée un nouvel objet Produit
-        $produit = new Produit();
-        $produit->setNom($data['nom'])
-            ->setPrix($data['prix'])
-            ->setDescription($data['description'] ?? null)
-            ->setDateCreation(new \DateTime());
-
-        // Persiste et sauvegarde dans la base de données
-        $entityManager->persist($produit);
-        $entityManager->flush();
-
-        return $this->json([
-            'message' => 'Produit ajouté avec succès',
-            'id' => $produit->getId(),
-        ], 201);
     }
-}
+}    
