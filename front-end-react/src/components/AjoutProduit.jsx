@@ -16,7 +16,7 @@ function AjoutProduitForm() {
     useEffect(() => {
         api.get('/categories')
             .then((response) => {
-                setCategories(response.data['member']); 'hydra:member'
+                setCategories(response.data['member']); 
             })
             .catch((error) => {
                 console.error('Erreur lors du chargement des catégories', error);
@@ -54,7 +54,6 @@ function AjoutProduitForm() {
             setMessage('Erreur lors de l’ajout du produit.');
         });
     };
-
     return (
         <div>
             <h2>Ajouter un Produit</h2>
