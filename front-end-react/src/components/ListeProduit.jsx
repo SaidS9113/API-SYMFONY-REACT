@@ -1,35 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProduits, deleteProduit } from '../redux/slices/produitSlice';
 
 function ListeProduit() {
-    const [produits, setProduits] = useState([]);
+    const dispatch = useDispatch();
+    const { produits, loading, error } = useSelector((state) => state.produit);
 
+    // Charger les produits depuis l'API
     useEffect(() => {
-        api.get('/product')
-            .then((response) => {
-                const produitsData = response.data || [];
-                setProduits(produitsData);
-            })
-            .catch((error) => {
-                console.error('Erreur lors de la récupération des produits :', error);
-            });
-    }, []);
+        dispatch(fetchProduits());
+    }, [dispatch]);
 
     // Fonction pour supprimer un produit
     const handleDelete = (id) => {
         if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit et sa catégorie ?')) {
-            api.delete(`/product/${id}`)
-                .then(() => {
-                    // Met à jour la liste des produits après suppression
-                    setProduits(produits.filter((produit) => produit.id !== id));
-                    alert('Produit supprimé avec succès.');
-                })
-                .catch((error) => {
-                    console.error('Erreur lors de la suppression du produit :', error);
-                    alert('Une erreur est survenue lors de la suppression.');
-                });
+            dispatch(deleteProduit(id))
+                .then(() => alert('Produit supprimé avec succès.'))
+                .catch(() => alert('Une erreur est survenue lors de la suppression.'));
         }
     };
+
+    if (loading) return <p className="text-center">Chargement...</p>;
+    if (error) return <p className="text-center text-red-500">Erreur : {error}</p>;
 
     return (
         <div className="container mx-auto p-4">
@@ -47,60 +39,58 @@ function ListeProduit() {
                         </tr>
                     </thead>
                     <tbody>
-    {produits.length > 0 ? (
-        produits.map((produit) => (
-            <tr
-                key={produit.id}
-                className="hover:bg-gray-100 border-b transition duration-200 ease-in-out"
-            >
-                <td className="px-6 py-4 text-gray-700">{produit.id}</td>
-                <td className="px-6 py-4 text-gray-700">{produit.nom}</td>
-                <td className="px-6 py-4 text-gray-700">{produit.description}</td>
-                <td className="px-6 py-4 text-gray-700">{produit.prix}</td>
-                <td className="px-6 py-4 text-gray-700">{produit.categorie.nom || 'Non défini'}</td>
-                <td className="px-6 py-4 text-gray-700">
-                    {produit.dateCreation
-                        ? new Date(produit.dateCreation).toLocaleDateString()
-                        : 'Non disponible'}
-                </td>
-                {/* Colonne pour le bouton Modifier */}
-                <td className="px-6 py-4 text-center">
-                    <a
-                    
-                        href={`/ModificationProduit/${produit.id}`}
-                        className="text-blue-600 hover:text-blue-800"
-                        title="Modifier"
-                    >
-                        ✏️
-                    </a>
-                </td>
-                {/* Colonne pour le bouton Supprimer */}
-                <td className="px-6 py-4 text-center">
-                    <button
-                        onClick={() => handleDelete(produit.id)}
-                        className="text-red-600 hover:text-red-800"
-                        title="Supprimer"
-                    >
-                        🗑️
-                    </button>
-                </td>
-            </tr>
-        ))
-    ) : (
-        <tr>
-            <td
-                colSpan="8" // Mise à jour pour inclure les nouvelles colonnes
-                className="px-6 py-4 text-center text-gray-500"
-            >
-                Aucun produit trouvé.
-            </td>
-        </tr>
-    )}
-</tbody>
+                        {produits.length > 0 ? (
+                            produits.map((produit) => (
+                                <tr
+                                    key={produit.id}
+                                    className="hover:bg-gray-100 border-b transition duration-200 ease-in-out"
+                                >
+                                    <td className="px-6 py-4 text-gray-700">{produit.id}</td>
+                                    <td className="px-6 py-4 text-gray-700">{produit.nom}</td>
+                                    <td className="px-6 py-4 text-gray-700">{produit.description}</td>
+                                    <td className="px-6 py-4 text-gray-700">{produit.prix}</td>
+                                    <td className="px-6 py-4 text-gray-700">{produit.categorie.nom || 'Non défini'}</td>
+                                    <td className="px-6 py-4 text-gray-700">
+                                        {produit.dateCreation
+                                            ? new Date(produit.dateCreation).toLocaleDateString()
+                                            : 'Non disponible'}
+                                    </td>
+                                    {/* Colonne pour le bouton Modifier */}
+                                    <td className="px-6 py-4 text-center">
+                                        <a
+                                            href={`/ModificationProduit/${produit.id}`}
+                                            className="text-blue-600 hover:text-blue-800"
+                                            title="Modifier"
+                                        >
+                                            ✏️
+                                        </a>
+                                    </td>
+                                    {/* Colonne pour le bouton Supprimer */}
+                                    <td className="px-6 py-4 text-center">
+                                        <button
+                                            onClick={() => handleDelete(produit.id)}
+                                            className="text-red-600 hover:text-red-800"
+                                            title="Supprimer"
+                                        >
+                                            🗑️
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="8"
+                                    className="px-6 py-4 text-center text-gray-500"
+                                >
+                                    Aucun produit trouvé.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
             </div>
         </div>
     );
 }
-
 export default ListeProduit;

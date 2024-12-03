@@ -8,6 +8,7 @@ import Contact from "./components/Contact";
 import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+
 import './assets/css/style.css';
 
 function App() {
