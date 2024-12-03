@@ -2,10 +2,14 @@
 export default {
   content: [
     "index.html",
-    "./src/**/*.{js,ts,jsx,tsx}"
-  ], // Modifiez ce chemin selon la structure de votre projet
+    "./src/**/*.{js,ts,jsx,tsx}" 
+  ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Nunito', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'], 
+      },
+    },
   },
   plugins: [],
-}
+};

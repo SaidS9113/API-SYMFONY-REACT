@@ -114,4 +114,87 @@ public function addCategorie(Request $request, EntityManagerInterface $entityMan
         return $this->json(['error' => 'Erreur lors de l’ajout de la catégorie'], 500);
     }
 }
+
+#[Route('/api/product/{id}', name: 'app_delete_product', methods: ['DELETE'])]
+public function deleteProduit(int $id, EntityManagerInterface $entityManager): JsonResponse
+{
+    try {
+        $produit = $entityManager->getRepository(Produit::class)->find($id);
+
+        if (!$produit) {
+            return $this->json(['error' => 'Produit non trouvé'], 404);
+        }
+
+        // Supprime le produit et conserve la catégorie si nécessaire
+        $entityManager->remove($produit);
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Produit supprimé avec succès']);
+    } catch (\Exception $e) {
+        return $this->json(['error' => 'Erreur lors de la suppression du produit'], 500);
+    }
+}
+
+#[Route('/api/product/{id}', name: 'app_update_product', methods: ['PUT'])]
+public function updateProduit(int $id, Request $request, EntityManagerInterface $entityManager): JsonResponse
+{
+    try {
+        $produit = $entityManager->getRepository(Produit::class)->find($id);
+
+        if (!$produit) {
+            return $this->json(['error' => 'Produit non trouvé'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['nom'], $data['prix'], $data['categorie'])) {
+            return $this->json(['error' => 'Les champs nom, prix et catégorie sont obligatoires'], 400);
+        }
+
+        $categorie = $entityManager->getRepository(Categorie::class)->find($data['categorie']);
+        if (!$categorie) {
+            return $this->json(['error' => 'Catégorie invalide'], 400);
+        }
+
+        $produit->setNom($data['nom'])
+            ->setPrix($data['prix'])
+            ->setDescription($data['description'] ?? $produit->getDescription())
+            ->setCategorie($categorie);
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Produit modifié avec succès', 'id' => $produit->getId()]);
+    } catch (\Exception $e) {
+        return $this->json(['error' => 'Erreur lors de la modification du produit : ' . $e->getMessage()], 500);
+    }
+}
+
+#[Route('/api/product/{id}', name: 'app_get_product', methods: ['GET'])]
+public function getProduit(int $id, EntityManagerInterface $entityManager): JsonResponse
+{
+    try {
+        $produit = $entityManager->getRepository(Produit::class)->find($id);
+
+        if (!$produit) {
+            return $this->json(['error' => 'Produit non trouvé'], 404);
+        }
+
+        $data = [
+            'id' => $produit->getId(),
+            'nom' => $produit->getNom(),
+            'description' => $produit->getDescription(),
+            'prix' => $produit->getPrix(),
+            'categorie' => [
+                'id' => $produit->getCategorie()->getId(),
+                'nom' => $produit->getCategorie()->getNom(),
+            ],
+            'dateCreation' => $produit->getDateCreation(),
+        ];
+
+        return $this->json($data);
+    } catch (\Exception $e) {
+        return $this->json(['error' => 'Erreur lors de la récupération du produit : ' . $e->getMessage()], 500);
+    }
+}
+
 }
