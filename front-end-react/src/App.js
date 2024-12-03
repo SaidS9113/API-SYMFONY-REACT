@@ -5,6 +5,8 @@ import ListeProduit from "./components/ListeProduit";
 import AjoutProduit from "./components/AjoutProduit";
 import ModificationProduit from "./components/ModificationProduit";
 import Contact from "./components/Contact";
+import FormAuth from "./components/FormAuth";
+import Inscription from "./components/Inscription";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import './assets/css/style.css';
 
@@ -21,6 +23,8 @@ function App() {
        <Route path="/liste-produit" element={<ListeProduit />} />
        <Route path="/ajout-produit" element={<AjoutProduit />} />
        <Route path="/ModificationProduit/:id" element={<ModificationProduit />} />
+       <Route path="/form-auth" element={<FormAuth />} />
+       <Route path="/inscription" element={<Inscription />} />
        <Route path="/contact" element={<Contact />} />
        </Routes>
        </Router>
