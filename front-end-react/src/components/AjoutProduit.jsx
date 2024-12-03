@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import AjoutCategorie from './AjoutCategorie';
 import api from '../api'; 
 
-function AjoutProduitForm() {
+
+function AjoutProduit() {
     const [formData, setFormData] = useState({
         nom: '',
         description: '',
@@ -9,31 +11,33 @@ function AjoutProduitForm() {
         categorie: '',
     });
 
-    const [categories, setCategories] = useState([]); 
+    const [categories, setCategories] = useState([]);
     const [message, setMessage] = useState('');
 
-    
+    // Charger les catégories existantes
     useEffect(() => {
+        chargerCategories();
+    }, []);
+
+    const chargerCategories = () => {
         api.get('/categories')
             .then((response) => {
-                setCategories(response.data['member']); 
+                setCategories(response.data['member']);
             })
             .catch((error) => {
                 console.error('Erreur lors du chargement des catégories', error);
                 setMessage('Erreur lors du chargement des catégories.');
             });
-    }, []);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // Soumission du formulaire
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Valider les champs requis
         if (!formData.nom || !formData.prix || !formData.categorie) {
             setMessage('Nom, prix et catégorie sont requis.');
             return;
@@ -43,16 +47,21 @@ function AjoutProduitForm() {
             nom: formData.nom,
             description: formData.description,
             prix: parseFloat(formData.prix),
-            categorie: formData.categorie, 
+            categorie: formData.categorie,
         })
-        .then((response) => {
-            setMessage('Produit ajouté avec succès !');
-            setFormData({ nom: '', description: '', prix: '', categorie: '' }); 
-        })
-        .catch((error) => {
-            console.error(error);
-            setMessage('Erreur lors de l’ajout du produit.');
-        });
+            .then(() => {
+                setMessage('Produit ajouté avec succès !');
+                setFormData({ nom: '', description: '', prix: '', categorie: '' });
+            })
+            .catch((error) => {
+                console.error('Erreur lors de l’ajout du produit.', error);
+                setMessage('Erreur lors de l’ajout du produit.');
+            });
+    };
+
+    const handleCategorieAdded = (nouvelleCategorie) => {
+        // Ajouter la nouvelle catégorie à la liste existante
+        setCategories((prevCategories) => [...prevCategories, nouvelleCategorie]);
     };
     return (
         <div>
@@ -105,8 +114,9 @@ function AjoutProduitForm() {
 </div>
                 <button type="submit">Ajouter le Produit</button>
             </form>
+            <AjoutCategorie onCategorieAdded={handleCategorieAdded} />
         </div>
     );
 }
 
-export default AjoutProduitForm;
+export default AjoutProduit;

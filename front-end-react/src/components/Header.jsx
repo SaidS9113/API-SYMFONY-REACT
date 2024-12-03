@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
   function Header() {
       return (
@@ -8,10 +9,21 @@ import { Fragment } from "react";
           <a class="text-3xl font-bold font-heading" href="#"></a>
             <h1 class="Logo"><a href="">Sport<span>C</span>ards</a></h1>
           <ul class="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 font-bold">
-            <li class="lienRoot text-white"><a href="#">Accueil</a></li>
-            <li class="lienRoot text-white"><a href="#">Voitures</a></li>
-            <li class="lienRoot text-white"><a href="#">Catégories</a></li>
-            <li class="lienRoot text-white"><a href="#">Contact</a></li>
+            <li class="lienRoot text-white">
+            <Link to="/accueil">Accueil</Link>
+              </li>
+              <li class="lienRoot text-white">
+              <Link to="/boutique">Boutique</Link>
+              </li>
+            <li class="lienRoot text-white">
+            <Link to="/liste-produit">Liste Véhicule</Link>
+              </li>
+            <li class="lienRoot text-white">
+            <Link to="/ajout-produit">Ajout Véhicule</Link>
+              </li>
+            <li class="lienRoot text-white">
+            <Link to="/Contact">Contact</Link>
+              </li>
           </ul>
         
           <div class="hidden xl:flex items-center space-x-5 items-center">

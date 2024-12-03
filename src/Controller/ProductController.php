@@ -76,4 +76,42 @@ class ProductController extends AbstractController
             dd($e); 
         }
     }
-}    
+
+
+#[Route('/api/add-categorie', name: 'app_add-categorie', methods: ['POST'])]
+
+public function addCategorie(Request $request, EntityManagerInterface $entityManager): JsonResponse
+{
+    try {
+        // Récupération des données du corps de la requête
+        $data = json_decode($request->getContent(), true);
+
+        // Vérification que le champ 'nom' est présent
+        if (!isset($data['nom']) || empty($data['nom'])) {
+            return $this->json(['error' => 'Le nom de la catégorie est requis'], 400);
+        }
+
+        // Vérification si la catégorie existe déjà (optionnel)
+        $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $data['nom']]);
+        if ($existingCategorie) {
+            return $this->json(['error' => 'Une catégorie avec ce nom existe déjà'], 400);
+        }
+
+        // Création d'une nouvelle catégorie
+        $categorie = new Categorie();
+        $categorie->setNom($data['nom']);
+
+        // Persistance de la nouvelle catégorie dans la base de données
+        $entityManager->persist($categorie);
+        $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Catégorie ajoutée avec succès',
+            'id' => $categorie->getId(),
+        ], 201);
+    } catch (\Exception $e) {
+        // Gestion des exceptions
+        return $this->json(['error' => 'Erreur lors de l’ajout de la catégorie'], 500);
+    }
+}
+}
