@@ -8,6 +8,7 @@ import ModificationProduit from "./components/ModificationProduit";
 import ModificationCategorie from "./components/ModificationCategorie";
 import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
+import Panier from "./components/Panier";
 import Footer from "./components/Footer";
 
 
@@ -32,6 +33,7 @@ function App() {
        <Route path="/ModificationCategorie/:id" element={<ModificationCategorie />} />
        <Route path="/form-auth" element={<FormAuth />} />
        <Route path="/inscription" element={<Inscription />} />
+       <Route path="/panier" element={<Panier />} />
        </Routes>
       
        

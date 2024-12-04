@@ -12,7 +12,7 @@ function Footer() {
                         <ul className="space-y-2">
                             <li>
                                 <Link
-                                    to="/"
+                                    to="/accueil"
                                     className="text-gray-400 hover:text-white transition duration-300"
                                 >
                                     Accueil
@@ -20,18 +20,18 @@ function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    to="/about"
+                                    to="/boutique"
                                     className="text-gray-400 hover:text-white transition duration-300"
                                 >
-                                    À propos
+                                    Boutique
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    to="/services"
+                                    to="/form-auth"
                                     className="text-gray-400 hover:text-white transition duration-300"
                                 >
-                                    Services
+                                    Login
                                 </Link>
                             </li>
                             <li>
