@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+
 function Boutique() {
   const [produits, setProduits] = useState([]);
 

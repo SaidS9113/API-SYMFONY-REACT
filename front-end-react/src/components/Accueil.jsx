@@ -1,5 +1,7 @@
 import React from "react";
-import BChiron from "../assets/img/B-chiron.webp"; 
+import BChiron from "../assets/img/B-chiron.webp";
+import Boutique from "./Boutique"
+
 
 function Accueil() {
     return (
@@ -20,6 +22,8 @@ function Accueil() {
                     </div>
                 </div>
             </div>
+            <Boutique />
+           
         </div>
     );
 }

@@ -8,6 +8,9 @@ import ModificationProduit from "./components/ModificationProduit";
 import ModificationCategorie from "./components/ModificationCategorie";
 import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
+import Footer from "./components/Footer";
+
+
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import './assets/css/style.css';
 
@@ -22,20 +25,20 @@ function App() {
        <Routes>
        <Route path="/accueil" element={<Accueil />} />
        <Route path="/boutique" element={<Boutique />} />
-       <Route path="/liste-produit" element={<ListeProduit />} />
+       <Route path="/liste-vehicule" element={<ListeProduit />} />
        <Route path="/liste-categorie" element={<ListeCategorie />} />
-       <Route path="/ajout-produit" element={<AjoutProduit />} />
+       <Route path="/ajout-vehicule-categorie" element={<AjoutProduit />} />
        <Route path="/ModificationProduit/:id" element={<ModificationProduit />} />
        <Route path="/ModificationCategorie/:id" element={<ModificationCategorie />} />
        <Route path="/form-auth" element={<FormAuth />} />
        <Route path="/inscription" element={<Inscription />} />
        </Routes>
-       </Router>
       
-       <footer>
-      
-       </footer>
        
+       <footer>
+      <Footer/>
+       </footer>
+       </Router>
        
   
        </>
