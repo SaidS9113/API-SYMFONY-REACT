@@ -79,6 +79,8 @@ theme: {
 - php bin/console make:entity user / puis tout s'est fait automatiquement pour l'entity role, les types et leurs relation
 
 1.20. Mise en place de l'environnemment pour JWT
-- composer require lexik/jwt-authentication-bundle   
+- composer require lexik/jwt-authentication-bundle 
+
+1.21. Mise en place du Design avancées
 
 
