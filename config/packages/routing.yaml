@@ -9,7 +9,5 @@ when@prod:
         router:
             strict_requirements: null
 
-        api_login:
-            path: /api/login
-            controller: App\Controller\ApiLoginController::login
+        
 

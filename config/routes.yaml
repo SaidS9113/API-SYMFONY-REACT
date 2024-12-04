@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+api_login:
+    path: /api/login
+    controller: App\Controller\AuthController::login
+    methods: [POST]
+

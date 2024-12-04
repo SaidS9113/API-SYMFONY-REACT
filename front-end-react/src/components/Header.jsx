@@ -18,11 +18,11 @@ import { Link } from "react-router-dom";
             <li class="lienRoot text-white">
             <Link to="/liste-produit">Liste Véhicule</Link>
               </li>
+              <li class="lienRoot text-white">
+            <Link to="/liste-categorie">Liste Catégorie</Link>
+              </li>
             <li class="lienRoot text-white">
             <Link to="/ajout-produit">Ajout Véhicule</Link>
-              </li>
-              <li class="lienRoot text-white">
-            <Link to="/contact">Contact</Link>
               </li>
           </ul>
         

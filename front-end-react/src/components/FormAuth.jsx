@@ -1,24 +1,63 @@
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function FormAuth() {
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/api/login", formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            // Stocker le token JWT dans le localStorage
+            localStorage.setItem("jwt_token", response.data.token);
+
+            // Rediriger vers une page protégée (par exemple, accueil)
+            navigate("/accueil");
+        } catch (error) {
+            console.error("Erreur d'authentification :", error);
+            setErrorMessage("Email ou mot de passe incorrect.");
+        }
+    };
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-sm w-full">
                 <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
-                <form>
+                {errorMessage && (
+                    <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
+                )}
+                <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label
-                            htmlFor="username"
+                            htmlFor="email"
                             className="block text-gray-700 text-sm font-bold mb-2"
                         >
-                            Nom d'utilisateur
+                            Email
                         </label>
                         <input
-                            id="username"
-                            type="text"
-                            placeholder="Entrez votre nom d'utilisateur"
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Entrez votre email"
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            value={formData.email}
+                            onChange={handleChange}
                             required
                         />
                     </div>
@@ -31,9 +70,12 @@ function FormAuth() {
                         </label>
                         <input
                             id="password"
+                            name="password"
                             type="password"
                             placeholder="Entrez votre mot de passe"
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            value={formData.password}
+                            onChange={handleChange}
                             required
                         />
                     </div>

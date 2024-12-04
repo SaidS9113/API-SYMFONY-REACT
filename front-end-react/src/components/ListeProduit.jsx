@@ -36,6 +36,7 @@ function ListeProduit() {
                             <th className="px-6 py-3 text-left text-gray-600 font-medium uppercase tracking-wider">Prix (€)</th>
                             <th className="px-6 py-3 text-left text-gray-600 font-medium uppercase tracking-wider">Catégorie</th>
                             <th className="px-6 py-3 text-left text-gray-600 font-medium uppercase tracking-wider">Date de création</th>
+                            <th className="px-6 py-3 text-center text-gray-600 font-medium uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
