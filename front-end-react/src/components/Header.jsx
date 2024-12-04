@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
       <nav class="flex justify-between bg-white-900 text-black w-screen">
         <div class="px-5 xl:px-12 py-6 flex w-full items-center">
           <a class="text-3xl font-bold font-heading" href="#"></a>
-            <h1 class="Logo"><a href="">Sport<span>C</span>ards</a></h1>
+            <h1 class="Logo"><a href="/accueil">Sport<span>C</span>ards</a></h1>
           <ul class="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 font-bold">
             <li class="lienRoot text-white">
             <Link to="/accueil">Accueil</Link>
@@ -16,13 +16,13 @@ import { Link } from "react-router-dom";
               <Link to="/boutique">Boutique</Link>
               </li>
             <li class="lienRoot text-white">
-            <Link to="/liste-produit">Liste Véhicule</Link>
+            <Link to="/liste-vehicule">Liste Véhicule</Link>
               </li>
               <li class="lienRoot text-white">
             <Link to="/liste-categorie">Liste Catégorie</Link>
               </li>
             <li class="lienRoot text-white">
-            <Link to="/ajout-produit">Ajout Véhicule</Link>
+            <Link to="/ajout-vehicule-categorie">Ajout Véhicule</Link>
               </li>
           </ul>
         
