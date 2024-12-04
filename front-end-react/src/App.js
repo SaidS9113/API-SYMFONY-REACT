@@ -5,11 +5,12 @@ import ListeProduit from "./components/ListeProduit";
 import ListeCategorie from "./components/ListeCategorie";
 import AjoutProduit from "./components/AjoutProduit";
 import ModificationProduit from "./components/ModificationProduit";
+import ModificationCategorie from "./components/ModificationCategorie";
 import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-
 import './assets/css/style.css';
+
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
        <Route path="/liste-categorie" element={<ListeCategorie />} />
        <Route path="/ajout-produit" element={<AjoutProduit />} />
        <Route path="/ModificationProduit/:id" element={<ModificationProduit />} />
+       <Route path="/ModificationCategorie/:id" element={<ModificationCategorie />} />
        <Route path="/form-auth" element={<FormAuth />} />
        <Route path="/inscription" element={<Inscription />} />
        </Routes>

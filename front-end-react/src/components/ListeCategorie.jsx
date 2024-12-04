@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function ListeCategorie() {
     const [categories, setCategories] = useState([]);
@@ -76,6 +77,14 @@ function ListeCategorie() {
                                     <td className="px-6 py-4 text-gray-700">{categorie.id}</td>
                                     <td className="px-6 py-4 text-gray-700">{categorie.nom}</td>
                                     <td className="px-6 py-4 text-center flex justify-center space-x-4">
+                                        {/* Bouton Modifier */}
+                                        <a
+                                            href={`/ModificationCategorie/${categorie.id}`}
+                                            className="text-blue-600 hover:text-blue-800"
+                                            title="Modifier"
+                                        >
+                                            ✏️
+                                        </a>
                                         {/* Bouton Supprimer */}
                                         <button
                                             onClick={() => deleteCategorie(categorie.id)}
