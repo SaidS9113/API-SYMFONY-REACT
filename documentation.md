@@ -68,7 +68,7 @@ theme: {
     },
   },
 
-1.17. Création des routes  GET, POST et DELETE pour categorie
+1.17. Création des routes  GET, POST et DELETE pour categorie et je n'ai pas réussi à faire le PUT
 - Dans le Controller
 
 1.18. Installation de Redux et Mise en place de l'environnement dans le dossier front-end-react
@@ -81,6 +81,14 @@ theme: {
 1.20. Mise en place de l'environnemment pour JWT
 - composer require lexik/jwt-authentication-bundle 
 
-1.21. Mise en place du Design avancées
+1.21. Création du formulaire de login et inscription
+
+1.22. Essaye du login JWT mais je n'ai pas réussi... erreur 405
+
+1.23. Mise en place du Design avancées (Accueil, Footer, Panier)
+
+1.24. Tentative de déployement sur Railway.app mais je n'ai pas réussi...
+
+
 
 

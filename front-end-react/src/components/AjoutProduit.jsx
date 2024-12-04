@@ -63,7 +63,7 @@ function AjoutProduit() {
 
     return (
         <div className="container mx-auto px-4 py-6">
-            <h2 className="text-2xl font-bold mb-4 text-center">Ajouter un Produit</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">Ajouter un Véhicule</h2>
             {message && (
                 <p className="text-center text-sm text-red-500 mb-4">{message}</p>
             )}

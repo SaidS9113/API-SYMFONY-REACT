@@ -68,7 +68,7 @@ function ModificationProduit() {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold text-center mb-6">Modifier le produit</h1>
+            <h1 className="text-2xl font-bold text-center mb-6">Modifier le véhicule</h1>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
                     <label htmlFor="nom" className="block text-gray-700 font-bold mb-2">

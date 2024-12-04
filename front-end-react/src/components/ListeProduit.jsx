@@ -25,7 +25,7 @@ function ListeProduit() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold text-center mb-6">Liste des produits</h1>
+            <h1 className="text-2xl font-bold text-center mb-6">Liste des véhicules</h1>
             <div className="overflow-x-auto">
                 <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-200">
