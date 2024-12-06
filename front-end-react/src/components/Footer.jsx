@@ -66,7 +66,7 @@ function Footer() {
 
                 <div className="mt-10 border-t border-gray-700 pt-6 text-center">
                     <p className="text-sm text-gray-400">
-                        © 2024 SportCards. Tous droits réservés à Said.
+                        © 2024 SportCars. Tous droits réservés à Said.
                     </p>
                 </div>
             </div>
