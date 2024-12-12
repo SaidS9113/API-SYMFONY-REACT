@@ -1,11 +1,9 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
-
-api_login:
-    path: /api/login
-    controller: App\Controller\AuthController::login
+# config/routes.yaml
+api_login_check:
+    path: /api/login_check
     methods: [POST]
 
+# Import des autres routes définies avec des attributs dans les contrôleurs
+controllers:
+    resource: ../src/Controller/
+    type: attribute

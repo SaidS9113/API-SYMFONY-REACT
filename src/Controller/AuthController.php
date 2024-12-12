@@ -2,46 +2,33 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
 
-class AuthController
+#[Route('/api', name: 'api_')]
+class AuthController extends AbstractController
 {
-    private $jwtManager;
-    private $userProvider;
-
-    public function __construct(JWTTokenManagerInterface $jwtManager, UserProviderInterface $userProvider)
+    #[Route('/login_check', name: 'login_check', methods: ['POST'])]
+    public function loginCheck(): JsonResponse
     {
-        $this->jwtManager = $jwtManager;
-        $this->userProvider = $userProvider;
+        throw new \RuntimeException('This method should not be called directly. LexikJWTAuthenticationBundle handles the login process.');
     }
 
-    public function login(Request $request): JsonResponse
+    #[Route('/profile', name: 'profile', methods: ['GET'])]
+    public function profile(): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $user = $this->getUser();
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['error' => 'Invalid JSON'], 400);
+        if (!$user || !$user instanceof User) {
+            return $this->json(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
-
-        try {
-            $user = $this->userProvider->loadUserByIdentifier($email);
-
-            if (password_verify($password, $user->getPassword())) {
-                // Génération du token JWT
-                $token = $this->jwtManager->create($user);
-                return new JsonResponse(['token' => $token]);
-            }
-
-            throw new AuthenticationException('Invalid credentials.');
-        } catch (AuthenticationException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 401);
-        }
+        return $this->json([
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ]);
     }
 }
