@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProduits, deleteProduit } from '../redux/slices/produitSlice';
 
+
 function ListeProduit() {
     const dispatch = useDispatch();
     const { produits, loading, error } = useSelector((state) => state.produit);

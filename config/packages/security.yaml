@@ -21,8 +21,9 @@ security:
             pattern: ^/api
             stateless: true
             provider: app_user_provider
-            custom_authenticator: lexik_jwt_authentication.jwt_manager
+            jwt: ~
 
     access_control:
-        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/admin, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api, roles: PUBLIC_ACCESS }
+        
