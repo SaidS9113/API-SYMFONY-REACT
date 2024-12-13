@@ -6,17 +6,21 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: email # Changez "email" si vous utilisez un autre champ comme "username"
 
     firewalls:
+        # Firewall pour la connexion via JWT
         login:
             pattern: ^/api/login_check
             stateless: true
             json_login:
                 check_path: /api/login_check
+                username_path: email # Assurez-vous que cela correspond à la clé envoyée dans la requête
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
+        # Firewall pour les routes protégées nécessitant un JWT
         api:
             pattern: ^/api
             stateless: true
@@ -24,6 +28,11 @@ security:
             jwt: ~
 
     access_control:
-    - { path: ^/api/admin, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api, roles: PUBLIC_ACCESS }
-        
+        # Accès restreint aux routes administrateurs
+        - { path: ^/api/admin, roles: ROLE_ADMIN }
+
+        # Accès restreint aux utilisateurs authentifiés pour toutes les autres routes de l'API
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+        # Exception : La route de connexion est publique
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
