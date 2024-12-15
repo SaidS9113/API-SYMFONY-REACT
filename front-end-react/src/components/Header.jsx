@@ -1,89 +1,114 @@
-import { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "./UserContext"; // Import du contexte utilisateur
 
-  function Header() {
-      return (
-        <Fragment className="header">
-      <nav class="flex justify-between bg-white-900 text-black w-screen">
-        <div class="px-5 xl:px-12 py-6 flex w-full items-center">
-          <a class="text-3xl font-bold font-heading" href="#"></a>
-            <h1 class="Logo"><a href="/accueil">Sport<span>C</span>ars</a></h1>
-          <ul class="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 font-bold">
-            <li class="lienRoot text-white">
-            <Link to="/accueil">Accueil</Link>
-              </li>
-              <li class="lienRoot text-white">
+function Header() {
+  const { user, logout } = useContext(UserContext); // Récupération de l'état utilisateur via le contexte
+
+  return (
+    <Fragment className="header">
+      <nav className="flex justify-between bg-white-900 text-black w-screen">
+        <div className="px-5 xl:px-12 py-6 flex w-full items-center">
+          <h1 className="Logo">
+            <Link to="/accueil">
+              Sport<span>C</span>ars
+            </Link>
+          </h1>
+          <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 font-bold">
+            <li className="lienRoot text-white">
+              <Link to="/accueil">Accueil</Link>
+            </li>
+            <li className="lienRoot text-white">
               <Link to="/boutique">Boutique</Link>
-              </li>
-            <li class="lienRoot text-white">
-            <Link to="/liste-vehicule">Liste Véhicule</Link>
-              </li>
-              <li class="lienRoot text-white">
-            <Link to="/liste-categorie">Liste Catégorie</Link>
-              </li>
-            <li class="lienRoot text-white">
-            <Link to="/ajout-vehicule-categorie">Ajout Véhicule</Link>
-              </li>
+            </li>
+
+            {/* Liens visibles uniquement pour l'administrateur */}
+            {user.isAdmin && (
+              <>
+                <li className="lienRoot text-white">
+                  <Link to="/liste-vehicule">Liste Véhicule</Link>
+                </li>
+                <li className="lienRoot text-white">
+                  <Link to="/liste-categorie">Liste Catégorie</Link>
+                </li>
+                <li className="lienRoot text-white">
+                  <Link to="/ajout-vehicule-categorie">Ajout Véhicule</Link>
+                </li>
+              </>
+            )}
           </ul>
-        
-          <div class="hidden xl:flex items-center space-x-5 items-center">
-            <a class="hover:text-gray-200" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m2.15-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
-</svg>
 
-            </a>
-            <a class="flex items-center hover:text-gray-200" href="/panier">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          <div className="hidden xl:flex items-center space-x-5">
+            {/* Panier séparé */}
+            <Link to="/panier" className="relative hover:text-gray-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </Link>
+
+            {/* Si utilisateur non connecté */}
+            {!user.isAuthenticated && (
+              <Link to="/form-auth" className="hover:text-gray-500">
+                {/* Icone Connexion */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5.121 17.804A3 3 0 017.828 16H16a3 3 0 013 3v1m-9-4h6m-6 0l3-3m-3 3l3 3"
+                  />
                 </svg>
-              <span class="flex absolute -mt-5 ml-4">
-                <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500">
-                  </span>
-                </span>
-            </a>
-          
-            <Link to="/form-auth" className="flex items-center hover:text-gray-200">
-            <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-8 w-8 hover:text-gray-200"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
->
-    <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.67-6 6h12c0-3.33-2.67-6-6-6z"
-    />
-</svg>
+              </Link>
+            )}
 
-        </Link>
-
+            {/* Si utilisateur connecté */}
+            {user.isAuthenticated && (
+              <>
+                <button
+                  onClick={logout}
+                  className="hover:text-gray-500"
+                  title="Déconnexion"
+                >
+                  {/* Icone Déconnexion */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m-4-1V7m4 9V7"
+                    />
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
         </div>
-      
-        <a class="xl:hidden flex mr-6 items-center" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          <span class="flex absolute -mt-5 ml-4">
-            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500">
-            </span>
-          </span>
-        </a>
-        <a class="navbar-burger self-center mr-12 xl:hidden" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </a>
       </nav>
+    </Fragment>
+  );
+}
 
-        </Fragment>
-      );
-    }
-    
-    export default Header;
+export default Header;

@@ -27,8 +27,15 @@ security:
             jwt: ~
 
     access_control:
-        # Exception : La route de connexion est publique
-        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+    # Route publique : accessible à tous
+    - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+    - { path: ^/api/product, roles: PUBLIC_ACCESS }
 
-        # Accès restreint aux utilisateurs authentifiés pour toutes les autres routes de l'API
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    # Routes accessibles uniquement aux administrateurs
+    - { path: ^/api/admin, roles: ROLE_ADMIN }
+
+    # Routes accessibles uniquement aux utilisateurs connectés
+    - { path: ^/api/user, roles: ROLE_USER }
+
+    # Routes accessibles uniquement aux utilisateurs connectés (général)
+    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
