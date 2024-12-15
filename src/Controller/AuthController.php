@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AuthController extends AbstractController
 {
-    #[Route('/api/login_check', name: 'app_security')]
+    #[Route('/api/login_check', name: 'app_security',methods: ['POST'])]
     public function loginCheck(): Response
     {
         // Le login_check est géré automatiquement par le LexikJWTAuthenticationBundle.

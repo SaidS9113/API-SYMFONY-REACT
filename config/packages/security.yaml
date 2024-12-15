@@ -6,7 +6,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email # Changez "email" si vous utilisez un autre champ comme "username"
+                property: email 
 
     firewalls:
         # Firewall pour la connexion via JWT
@@ -15,7 +15,7 @@ security:
             stateless: true
             json_login:
                 check_path: /api/login_check
-                username_path: email
+                username_path: email 
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure

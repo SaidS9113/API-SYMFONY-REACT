@@ -20,9 +20,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 180, unique: true, nullable: true)]
-    private ?string $username = null;
-
     #[ORM\Column]
     private array $roles = [];
 
@@ -31,9 +28,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
-
-    #[ORM\Column]
-    private bool $isVerified = false;
 
     public function getId(): ?int
     {
@@ -49,29 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->email = $email;
 
-        // Définit automatiquement le username comme l'email
-        $this->setUsernameAutomatically();
-
-        return $this;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function setUsernameAutomatically(): self
-    {
-        if ($this->email) {
-            $this->username = $this->email;
-        }
         return $this;
     }
 
@@ -126,17 +97,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
     }
 }
