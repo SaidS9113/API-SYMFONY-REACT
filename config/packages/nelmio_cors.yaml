@@ -1,8 +1,16 @@
+# config/packages/nelmio_cors.yaml
 nelmio_cors:
+    defaults:
+        allow_credentials: true  # Permet l'envoi des cookies, les autorisations, etc.
+        allow_origin: ['http://localhost:3000', 'http://172.20.10.10:3000']  # Origines autorisées
+        allow_headers: ['Content-Type', 'Authorization']  # En-têtes autorisés
+        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']  # Méthodes HTTP autorisées
+        expose_headers: ['Content-Disposition']  # En-têtes exposés au client
+        max_age: 3600  # Durée pendant laquelle le navigateur peut cacher la réponse CORS
     paths:
-        '^/api/':
-            allow_origin: ['http://localhost:3000', 'http://172.20.10.10:3000']
-            allow_headers: ['Content-Type', 'Authorization']
-            allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-            expose_headers: ['Content-Disposition']
-            max_age: 3600
+        '^/api/':  # Appliquer les règles CORS uniquement pour les routes qui commencent par "/api/"
+            allow_origin: ['http://localhost:3000', 'http://172.20.10.10:3000']  # Redéfinir si besoin
+            allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']  # Méthodes spécifiques pour ces routes
+            allow_headers: ['Content-Type', 'Authorization']  # En-têtes pour ces routes
+            expose_headers: ['Content-Disposition']  # En-têtes exposés pour ces routes
+            max_age: 3600  # Durée de mise en cache spécifique pour "/api/"
