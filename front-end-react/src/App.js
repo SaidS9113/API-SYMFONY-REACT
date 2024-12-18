@@ -9,6 +9,7 @@ import ModificationCategorie from "./components/ModificationCategorie";
 import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
 import Panier from "./components/Panier";
+import Profil from "./components/Profil";
 import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -23,7 +24,9 @@ function App() {
       <Router>
         <header>
           <Header />
+          
         </header>
+        <Profil />
         <Routes>
           {/* Routes accessibles à tout le monde */}
           <Route path="/accueil" element={<Accueil />} />
