@@ -1,4 +1,3 @@
-
 INSERT INTO categorie (id, nom) VALUES 
 (1, 'Hypercar'),
 (2, 'Sportive de luxe'),
@@ -12,8 +11,6 @@ INSERT INTO produit (id, nom, description, prix, date_creation, categorie_id) VA
 (4, 'Toyota RAV4 Hybrid', 'SUV hybride polyvalent et économique.', 40000, '2023-04-01 12:00:00', 4);
 
 
-INSERT INTO `user` (`email`, `roles`, `password`) VALUES 
-('s@gmail.com', '["ROLE_ADMIN"]', '$2y$13$uIvYjHMX6N9TLv7iFNHZUuySN2Fl3SYmWXkJbo1/.W1oIj8fBZdT2'),
-('p@gmail.com', '["ROLE_USER"]', '$2y$13$uIvYjHMX6N9TLv7iFNHZUuySN2Fl3SYmWXkJbo1/.W1oIj8fBZdT2');
-
+INSERT INTO user (email, roles, password, nom, prenom, adresse_postal) 
+VALUES ('admin@gmail.com', '["ROLE_ADMIN"]', '$2y$10$6dfn1KUSy6IRajAZUtgDe3FXh5jFtJItFO.O9mgCUjjxDEtC2C9V.', 'Dupont', 'Jean', '123 Rue de Paris');
 

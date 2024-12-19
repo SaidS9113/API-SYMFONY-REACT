@@ -24,9 +24,8 @@ function App() {
       <Router>
         <header>
           <Header />
-          
         </header>
-        <Profil />
+       
         <Routes>
           {/* Routes accessibles à tout le monde */}
           <Route path="/accueil" element={<Accueil />} />
@@ -34,6 +33,7 @@ function App() {
           <Route path="/panier" element={<Panier />} />
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/form-auth" element={<FormAuth />} />
+          <Route path="/profil-utilisateur" element={<Profil />} />
 
           {/* Routes réservées aux administrateurs */}
           <Route
