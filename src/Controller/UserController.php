@@ -8,10 +8,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserController extends AbstractController
 {
-    #[Route('/api/users', name: 'app_user', methods: ['GET'])]
+    // Route pour obtenir les données utilisateur
+    #[Route('/api/users', name: 'get_user_data', methods: ['GET'])] 
     public function getUserData(Request $request): JsonResponse
     {
         try {
@@ -44,8 +48,67 @@ class UserController extends AbstractController
         } catch (AuthenticationException $e) {
             return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return new JsonResponse([
+            return new JsonResponse([ 
                 'error' => 'Une erreur est survenue lors de la récupération des informations utilisateur.',
+                'details' => $e->getMessage(),
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Route pour mettre à jour les informations de l'utilisateur avec un ID
+    #[Route('/api/users/{id}', name: 'update_user', methods: ['PUT'])] 
+    public function updateUser(int $id, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): JsonResponse
+    {
+        try {
+            // Récupérer l'utilisateur à partir de l'ID
+            $user = $entityManager->getRepository(User::class)->find($id);
+
+            if (!$user) {
+                return new JsonResponse(['error' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
+            }
+
+            // Récupérer les données envoyées dans la requête
+            $data = json_decode($request->getContent(), true);
+            $oldPassword = $data['old_password'] ?? null;
+            $newPassword = $data['new_password'] ?? null;
+            $newEmail = $data['new_email'] ?? null;
+            $newNom = $data['new_nom'] ?? null;
+            $newPrenom = $data['new_prenom'] ?? null;
+            $newAdressePostal = $data['new_adresse_postal'] ?? null;
+
+            // Si un mot de passe est fourni, vérifier l'ancien mot de passe
+            if ($oldPassword && $newPassword) {
+                // Vérifier que l'ancien mot de passe est correct
+                if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
+                    return new JsonResponse(['error' => 'L\'ancien mot de passe est incorrect.'], JsonResponse::HTTP_BAD_REQUEST);
+                }
+
+                // Encoder le nouveau mot de passe
+                $encodedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($encodedPassword);
+            }
+
+            // Mettre à jour les autres informations de l'utilisateur (email, nom, prénom, adresse)
+            if ($newEmail) {
+                $user->setEmail($newEmail);
+            }
+            if ($newNom) {
+                $user->setNom($newNom);
+            }
+            if ($newPrenom) {
+                $user->setPrenom($newPrenom);
+            }
+            if ($newAdressePostal) {
+                $user->setAdressePostal($newAdressePostal);
+            }
+
+            // Enregistrer les modifications
+            $entityManager->flush();
+
+            return new JsonResponse(['message' => 'Les informations utilisateur ont été mises à jour avec succès.'], JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return new JsonResponse([ 
+                'error' => 'Une erreur est survenue lors de la mise à jour des informations utilisateur.',
                 'details' => $e->getMessage(),
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
