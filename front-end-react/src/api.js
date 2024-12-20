@@ -6,54 +6,69 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json", // Spécifie que nous envoyons/recevons du JSON
   },
-  timeout: 5000, // Limite le temps d'attente à 5 secondes (optionnel)
+  timeout: 5000, // Temps limite pour une requête (optionnel)
 });
 
 // Intercepteur pour ajouter le token JWT dans les en-têtes des requêtes
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("jwt_token"); // Récupère le token depuis le localStorage
+    // Récupère le token JWT depuis le localStorage
+    const token = localStorage.getItem("jwt_token");
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Ajoute l'en-tête Authorization
+      // Si le token existe, ajoute l'en-tête Authorization avec le token
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
+
+    // Affiche les logs uniquement en mode développement
     if (process.env.NODE_ENV === "development") {
-      console.log("Requête envoyée:", config); // Log uniquement en développement
+      console.log("Requête envoyée:", config);
     }
-    return config;
+
+    return config; // Retourne la configuration modifiée
   },
   (error) => {
+    // Erreur avant l'envoi de la requête
     console.error("Erreur avant envoi de la requête:", error.message);
-    return Promise.reject(error);
+    return Promise.reject(error); // Propage l'erreur pour gestion
   }
 );
 
 // Intercepteur pour gérer les réponses et les erreurs
 api.interceptors.response.use(
   (response) => {
+    // Affiche les logs uniquement en mode développement
     if (process.env.NODE_ENV === "development") {
-      console.log("Réponse reçue:", response); // Log uniquement en développement
+      console.log("Réponse reçue:", response);
     }
-    return response;
+
+    return response; // Retourne la réponse en cas de succès
   },
   (error) => {
     console.error("Erreur Axios:", error.message);
 
-    // Gestion des erreurs spécifiques
+    // Vérifie si une réponse est reçue avec une erreur spécifique
     if (error.response) {
       if (error.response.status === 401) {
         console.error("Erreur 401: utilisateur non authentifié.");
-        // Supprime le token expiré mais ne redirige pas
-        localStorage.removeItem("jwt_token");
+
+        // Supprime le token expiré pour éviter des utilisations futures
+        if (localStorage.getItem("jwt_token")) {
+          localStorage.removeItem("jwt_token");
+        }
+        // Vous pouvez rediriger l'utilisateur vers la page de connexion
+        // window.location.href = "/login"; // Par exemple, rediriger vers la page de connexion
       } else {
         console.error("Réponse serveur avec erreur:", error.response);
       }
     } else if (error.request) {
+      // Cas où aucune réponse n'a été reçue du serveur
       console.error("Aucune réponse reçue:", error.request);
     } else {
+      // Cas d'une erreur liée à la configuration de la requête
       console.error("Erreur lors de la configuration de la requête:", error.message);
     }
 
-    return Promise.reject(error); // Laissez l'erreur remonter pour gestion locale
+    return Promise.reject(error); // Propage l'erreur pour gestion locale
   }
 );
 

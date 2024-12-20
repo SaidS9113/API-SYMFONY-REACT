@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./UserContext";  // Assurez-vous que UserContext est bien configuré
 import axios from "axios";
 
 function FormAuth() {
@@ -21,17 +21,19 @@ function FormAuth() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
+            // Envoi de la requête POST vers l'API de login
             const response = await axios.post("http://127.0.0.1:8000/api/login_check", formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
 
-            // Utiliser la fonction "login" du contexte pour gérer l'état global
+            // Sauvegarder le token dans le localStorage via le contexte
             login(response.data.token);
 
-            // Rediriger vers une page protégée (par exemple, accueil)
+            // Rediriger vers la page d'accueil ou une page protégée après la connexion
             navigate("/accueil");
         } catch (error) {
             console.error("Erreur d'authentification :", error);
