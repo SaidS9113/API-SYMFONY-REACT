@@ -71,10 +71,10 @@ class UserController extends AbstractController
             $data = json_decode($request->getContent(), true);
             $oldPassword = $data['old_password'] ?? null;
             $newPassword = $data['new_password'] ?? null;
-            $newEmail = $data['new_email'] ?? null;
-            $newNom = $data['new_nom'] ?? null;
-            $newPrenom = $data['new_prenom'] ?? null;
-            $newAdressePostal = $data['new_adresse_postal'] ?? null;
+            $newEmail = $data['email'] ?? null;
+            $newNom = $data['nom'] ?? null;
+            $newPrenom = $data['prenom'] ?? null;
+            $newAdressePostal = $data['adresse_postal'] ?? null;
 
             // Si un mot de passe est fourni, vérifier l'ancien mot de passe
             if ($oldPassword && $newPassword) {
