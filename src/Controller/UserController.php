@@ -56,61 +56,100 @@ class UserController extends AbstractController
     }
 
     // Route pour mettre à jour les informations de l'utilisateur avec un ID
-    #[Route('/api/users/{id}', name: 'update_user', methods: ['PUT'])] 
-    public function updateUser(int $id, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): JsonResponse
-    {
-        try {
-            // Récupérer l'utilisateur à partir de l'ID
-            $user = $entityManager->getRepository(User::class)->find($id);
+#[Route('/api/users/{id}', name: 'update_user', methods: ['PUT'])]
+public function updateUser(
+    int $id,
+    Request $request,
+    UserPasswordHasherInterface $passwordHasher,
+    EntityManagerInterface $entityManager
+): JsonResponse {
+    try {
+        // Récupérer l'utilisateur à partir de l'ID
+        $user = $entityManager->getRepository(User::class)->find($id);
 
-            if (!$user) {
-                return new JsonResponse(['error' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
-            }
-
-            // Récupérer les données envoyées dans la requête
-            $data = json_decode($request->getContent(), true);
-            $oldPassword = $data['old_password'] ?? null;
-            $newPassword = $data['new_password'] ?? null;
-            $newEmail = $data['email'] ?? null;
-            $newNom = $data['nom'] ?? null;
-            $newPrenom = $data['prenom'] ?? null;
-            $newAdressePostal = $data['adresse_postal'] ?? null;
-
-            // Si un mot de passe est fourni, vérifier l'ancien mot de passe
-            if ($oldPassword && $newPassword) {
-                // Vérifier que l'ancien mot de passe est correct
-                if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
-                    return new JsonResponse(['error' => 'L\'ancien mot de passe est incorrect.'], JsonResponse::HTTP_BAD_REQUEST);
-                }
-
-                // Encoder le nouveau mot de passe
-                $encodedPassword = $passwordHasher->hashPassword($user, $newPassword);
-                $user->setPassword($encodedPassword);
-            }
-
-            // Mettre à jour les autres informations de l'utilisateur (email, nom, prénom, adresse)
-            if ($newEmail) {
-                $user->setEmail($newEmail);
-            }
-            if ($newNom) {
-                $user->setNom($newNom);
-            }
-            if ($newPrenom) {
-                $user->setPrenom($newPrenom);
-            }
-            if ($newAdressePostal) {
-                $user->setAdressePostal($newAdressePostal);
-            }
-
-            // Enregistrer les modifications
-            $entityManager->flush();
-
-            return new JsonResponse(['message' => 'Les informations utilisateur ont été mises à jour avec succès.'], JsonResponse::HTTP_OK);
-        } catch (\Exception $e) {
-            return new JsonResponse([ 
-                'error' => 'Une erreur est survenue lors de la mise à jour des informations utilisateur.',
-                'details' => $e->getMessage(),
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
         }
+
+        // Récupérer les données envoyées dans la requête
+        $data = json_decode($request->getContent(), true);
+        $oldPassword = $data['old_password'] ?? null;
+        $newPassword = $data['new_password'] ?? null;
+        $newEmail = $data['email'] ?? null;
+        $newNom = $data['nom'] ?? null;
+        $newPrenom = $data['prenom'] ?? null;
+        $newAdressePostal = $data['adresse_postal'] ?? null;
+
+        // Indicateur pour savoir si une déconnexion est nécessaire
+        $requiresLogout = false;
+
+        // Si un mot de passe est fourni, vérifier l'ancien mot de passe
+        if ($oldPassword && $newPassword) {
+            // Vérifier que l'ancien mot de passe est correct
+            if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
+                return new JsonResponse(['error' => 'L\'ancien mot de passe est incorrect.'], JsonResponse::HTTP_BAD_REQUEST);
+            }
+
+            // Encoder le nouveau mot de passe
+            $encodedPassword = $passwordHasher->hashPassword($user, $newPassword);
+            $user->setPassword($encodedPassword);
+            $requiresLogout = true; // Déconnexion requise après changement du mot de passe
+        }
+
+        // Mettre à jour l'email de l'utilisateur
+        if ($newEmail && $newEmail !== $user->getEmail()) {
+            $user->setEmail($newEmail);
+            $requiresLogout = true; // Déconnexion requise après changement d'email
+        }
+
+        // Mettre à jour les autres informations de l'utilisateur (nom, prénom, adresse)
+        if ($newNom) {
+            $user->setNom($newNom);
+        }
+        if ($newPrenom) {
+            $user->setPrenom($newPrenom);
+        }
+        if ($newAdressePostal) {
+            $user->setAdressePostal($newAdressePostal);
+        }
+
+        // Enregistrer les modifications
+        $entityManager->flush();
+
+        // Retourner une réponse adaptée selon si une déconnexion est requise
+        return new JsonResponse([
+            'message' => 'Les informations utilisateur ont été mises à jour avec succès.',
+            'requires_logout' => $requiresLogout,
+        ], JsonResponse::HTTP_OK);
+    } catch (\Exception $e) {
+        return new JsonResponse([
+            'error' => 'Une erreur est survenue lors de la mise à jour des informations utilisateur.',
+            'details' => $e->getMessage(),
+        ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
+}
+
+#[Route('/api/users/{id}', name: 'delete_user', methods: ['DELETE'])]
+public function deleteUser(
+    int $id,
+    EntityManagerInterface $entityManager
+): JsonResponse {
+    try {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Utilisateur supprimé avec succès.'], JsonResponse::HTTP_OK);
+    } catch (\Exception $e) {
+        return new JsonResponse([
+            'error' => 'Une erreur est survenue lors de la suppression de l\'utilisateur.',
+            'details' => $e->getMessage(),
+        ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
 }

@@ -8,23 +8,20 @@ function Profil() {
   const navigate = useNavigate();
 
   // États pour les champs utilisateur
-  const [userData, setUserData] = useState({
-    id: "", // Ajout d'un champ pour l'ID
+  const [formData, setFormData] = useState({
+    id: "",
     nom: "",
     prenom: "",
     adresse_postal: "",
     email: "",
-  });
-
-  const [passwordData, setPasswordData] = useState({
     oldPassword: "",
     newPassword: "",
+    passwordForDelete: "", // Champ pour le mot de passe de suppression
   });
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Vérifier si un token est présent dans le localStorage
   const token = localStorage.getItem("jwt_token");
 
   useEffect(() => {
@@ -43,8 +40,7 @@ function Profil() {
         return;
       }
 
-      // Récupérer l'ID utilisateur du token décodé
-      const userId = decodedToken.user_id; // Assurez-vous que le token contient cet attribut
+      const userId = decodedToken.user_id;
       fetchUserData(userId);
     } catch (error) {
       console.error("Erreur lors du décodage du token :", error);
@@ -59,31 +55,32 @@ function Profil() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUserData(response.data); // Réponse doit inclure les détails utilisateur
+      setFormData((prevData) => ({ ...prevData, ...response.data }));
     } catch (error) {
       console.error("Erreur lors de la récupération des informations utilisateur :", error);
       setErrorMessage("Impossible de charger vos informations.");
     }
   };
 
-  // Gérer la déconnexion
   const handleLogout = () => {
     logout();
     localStorage.removeItem("jwt_token");
     navigate("/accueil");
   };
 
-  // Gérer la modification du profil utilisateur
-  const handleProfileChange = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.put(
-        `/users/${userData.id}`, // Utilisez l'ID utilisateur ici
+      // Mettre à jour les informations utilisateur
+      const userResponse = await api.put(
+        `/users/${formData.id}`,
         {
-          nom: userData.nom,
-          prenom: userData.prenom,
-          adresse_postal: userData.adresse_postal,
-          email: userData.email,
+          nom: formData.nom,
+          prenom: formData.prenom,
+          adresse_postal: formData.adresse_postal,
+          email: formData.email,
+          old_password: formData.oldPassword || undefined, // Inclus uniquement si renseigné
+          new_password: formData.newPassword || undefined, // Inclus uniquement si renseigné
         },
         {
           headers: {
@@ -91,34 +88,56 @@ function Profil() {
           },
         }
       );
-      setSuccessMessage("Les informations ont été mises à jour avec succès !");
+
+      if (userResponse.data.requires_logout) {
+        setSuccessMessage(
+          "Vos modifications ont été enregistrées avec succès. Vous allez être redirigé vers la page d'accueil pour vous reconnecter."
+        );
+        setTimeout(() => {
+          handleLogout();
+        }, 5000);
+      } else {
+        setSuccessMessage("Les modifications ont été enregistrées avec succès !");
+        setFormData((prevData) => ({
+          ...prevData,
+          oldPassword: "",
+          newPassword: "",
+        }));
+      }
     } catch (error) {
       console.error("Erreur lors de la mise à jour du profil :", error);
-      setErrorMessage("Impossible de mettre à jour vos informations.");
+      setErrorMessage("Impossible d'enregistrer les modifications.");
     }
   };
 
-  // Gérer le changement de mot de passe
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    try {
-      await api.put(
-        `/users/${userData.id}`, // Utilisez l'ID utilisateur ici
-        {
-          old_password: passwordData.oldPassword,
-          new_password: passwordData.newPassword,
-        },
-        {
+  // Fonction pour supprimer le compte utilisateur
+  const handleDelete = async () => {
+    if (!formData.passwordForDelete) {
+      alert("Veuillez entrer votre mot de passe pour supprimer votre compte.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible."
+    );
+
+    if (confirmDelete) {
+      try {
+        const deleteResponse = await api.delete(`/users/${formData.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      setSuccessMessage("Le mot de passe a été changé avec succès !");
-      setPasswordData({ oldPassword: "", newPassword: "" });
-    } catch (error) {
-      console.error("Erreur lors du changement de mot de passe :", error);
-      setErrorMessage("Impossible de changer le mot de passe.");
+          data: { password: formData.passwordForDelete }, // Passer le mot de passe pour vérifier l'identité
+        });
+
+        setSuccessMessage("Votre compte a été supprimé avec succès.");
+        setTimeout(() => {
+          handleLogout(); // Déconnexion après suppression
+        }, 3000);
+      } catch (error) {
+        console.error("Erreur lors de la suppression du profil :", error);
+        setErrorMessage("Impossible de supprimer le compte.");
+      }
     }
   };
 
@@ -127,38 +146,30 @@ function Profil() {
       <h2 className="text-2xl font-semibold mb-6 text-gray-800 text-center">Profil Utilisateur</h2>
       {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
       {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
-      
-      {/* Formulaire pour modifier les informations du profil */}
-      <form onSubmit={handleProfileChange}>
-        <div className="space-y-4">
-          {/* Champ pour l'ID utilisateur caché */}
-          <input
-            type="hidden"
-            name="id"
-            value={userData.id}  // L'ID de l'utilisateur
-          />
 
-          {/* Champ pour nom */}
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4">
+          <input type="hidden" name="id" value={formData.id} />
+
           <div className="flex items-center gap-2">
             <label htmlFor="nom" className="w-24 text-gray-700 font-medium">Nom:</label>
             <input
               id="nom"
               name="nom"
               type="text"
-              value={userData.nom}
-              onChange={(e) => setUserData({ ...userData, nom: e.target.value })}
+              value={formData.nom}
+              onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
-          {/* Autres champs similaires */}
           <div className="flex items-center gap-2">
             <label htmlFor="prenom" className="w-24 text-gray-700 font-medium">Prénom:</label>
             <input
               id="prenom"
               name="prenom"
               type="text"
-              value={userData.prenom}
-              onChange={(e) => setUserData({ ...userData, prenom: e.target.value })}
+              value={formData.prenom}
+              onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
@@ -168,8 +179,8 @@ function Profil() {
               id="adresse_postal"
               name="adresse_postal"
               type="text"
-              value={userData.adresse_postal}
-              onChange={(e) => setUserData({ ...userData, adresse_postal: e.target.value })}
+              value={formData.adresse_postal}
+              onChange={(e) => setFormData({ ...formData, adresse_postal: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
@@ -179,31 +190,19 @@ function Profil() {
               id="email"
               name="email"
               type="email"
-              value={userData.email}
-              onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
-        </div>
-        <button
-          type="submit"
-          className="px-6 py-2 mt-4 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
-        >
-          Mettre à jour le profil
-        </button>
-      </form>
-
-      {/* Formulaire pour mot de passe */}
-      <form onSubmit={handlePasswordChange} className="mt-6">
-        <div className="space-y-4">
           <div className="flex items-center gap-2">
             <label htmlFor="old_password" className="w-24 text-gray-700 font-medium">Ancien:</label>
             <input
               id="old_password"
               name="old_password"
               type="password"
-              value={passwordData.oldPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+              value={formData.oldPassword}
+              onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
@@ -213,28 +212,43 @@ function Profil() {
               id="new_password"
               name="new_password"
               type="password"
-              value={passwordData.newPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+              value={formData.newPassword}
+              onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
               className="w-full px-4 py-2 border rounded-md bg-gray-100"
             />
           </div>
         </div>
+
         <button
           type="submit"
-          className="px-6 py-2 mt-4 bg-green-600 text-white rounded-md shadow hover:bg-green-700"
+          className="px-6 py-2 mt-4 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
         >
-          Changer le mot de passe
+          Modifier les informations
         </button>
       </form>
 
-      {/* Boutons */}
-      <div className="mt-6 flex justify-between">
-        <button
-          type="button"
-          className="px-6 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700"
-        >
-          Supprimer votre compte
-        </button>
+      <div className="mt-6">
+        <div className="flex flex-col items-start">
+          <label htmlFor="passwordForDelete" className="w-full text-gray-700 font-medium">Mot de passe (pour supprimer le compte):</label>
+          <input
+            id="passwordForDelete"
+            name="passwordForDelete"
+            type="password"
+            value={formData.passwordForDelete}
+            onChange={(e) => setFormData({ ...formData, passwordForDelete: e.target.value })}
+            className="w-full px-4 py-2 border rounded-md bg-gray-100"
+          />
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="px-6 py-2 mt-4 bg-red-600 text-white rounded-md shadow hover:bg-red-700"
+          >
+            Supprimer le compte
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 flex justify-end">
         <button
           onClick={handleLogout}
           className="px-6 py-2 bg-gray-600 text-white rounded-md shadow hover:bg-gray-700"

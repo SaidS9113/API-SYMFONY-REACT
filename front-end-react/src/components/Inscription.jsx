@@ -49,7 +49,7 @@ function Inscription() {
             
             // Redirection vers la page d'accueil après 2 secondes
             setTimeout(() => {
-                navigate("/accueil");
+                navigate("/form-auth");
             }, 2000);
         } catch (err) {
             // Gestion des erreurs retournées par l'API
