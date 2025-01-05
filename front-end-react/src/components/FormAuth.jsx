@@ -47,7 +47,7 @@ function FormAuth() {
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-sm w-full mb-6">
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-sm w-full mb-6 mt-[100px]">
                 <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
                 {errorMessage && (
                     <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
