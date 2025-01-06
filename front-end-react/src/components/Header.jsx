@@ -8,7 +8,7 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Appel de la fonction logout
+    logout();
     navigate("/accueil");
   };
 
@@ -17,7 +17,7 @@ function Header() {
   };
 
   return (
-    <Fragment className="header">
+    <div className="header">
       <nav className="flex justify-between bg-white-900 text-black w-screen">
         <div className="px-5 xl:px-12 py-6 flex w-full justify-between items-center">
           <h1 className="Logo">
@@ -35,7 +35,6 @@ function Header() {
               <Link to="/boutique">Boutique</Link>
             </li>
 
-            {/* Liens visibles uniquement pour l'administrateur */}
             {user.isAdmin && (
               <>
                 <li className="lienRoot text-white">
@@ -51,7 +50,6 @@ function Header() {
             )}
           </ul>
 
-          {/* Panier, icône login/déconnexion et icône menu pour tablette et mobile */}
           <div className="flex items-end space-x-5">
             <Link to="/panier" className="relative hover:text-gray-500">
               <svg
@@ -70,7 +68,6 @@ function Header() {
               </svg>
             </Link>
 
-            {/* Icône login/déconnexion pour écrans larges */}
             <div className="hidden 2xl:block">
               <Link
                 to={user.isAuthenticated ? "/profil-utilisateur" : "/form-auth"}
@@ -117,9 +114,64 @@ function Header() {
             </button>
           </div>
         </div>
+
+        {/* Menu mobile */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-50 2xl:hidden">
+            <div className="fixed inset-0 bg-black opacity-50" onClick={toggleMenu}></div>
+            <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-lg">
+              <div className="p-4">
+                <button onClick={toggleMenu} className="mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <ul className="space-y-4">
+                  <li>
+                    <Link to="/accueil" onClick={toggleMenu}>Accueil</Link>
+                  </li>
+                  <li>
+                    <Link to="/boutique" onClick={toggleMenu}>Boutique</Link>
+                  </li>
+                  {user.isAdmin && (
+                    <>
+                      <li>
+                        <Link to="/liste-vehicule" onClick={toggleMenu}>Liste Véhicule</Link>
+                      </li>
+                      <li>
+                        <Link to="/liste-categorie" onClick={toggleMenu}>Liste Catégorie</Link>
+                      </li>
+                      <li>
+                        <Link to="/ajout-vehicule-categorie" onClick={toggleMenu}>Ajout Véhicule</Link>
+                      </li>
+                    </>
+                  )}
+                  <li>
+                    <Link
+                      to={user.isAuthenticated ? "/profil-utilisateur" : "/form-auth"}
+                      onClick={toggleMenu}
+                    >
+                      {user.isAuthenticated ? "Profil" : "Connexion"}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
-      {/* Le reste du code reste inchangé */}
-    </Fragment>
+    </div>
   );
 }
 
