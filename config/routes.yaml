@@ -7,3 +7,10 @@ api_login_check:
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+app_add_product_image:
+    path: /api/add-product/{id}/image_url
+    methods: POST
+    controller: App\Controller\UploadImageController::addImageUrl
+
+
