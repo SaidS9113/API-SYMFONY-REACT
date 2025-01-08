@@ -10,6 +10,7 @@ import FormAuth from "./components/FormAuth";
 import Inscription from "./components/Inscription";
 import Panier from "./components/Panier";
 import Profil from "./components/Profil";
+import PageProduit from "./components/PageProduit";
 import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -20,11 +21,10 @@ import "./assets/css/style.css";
 function App() {
   return (
     <>
+    <header>
       <UserProvider>
         <Router>
-          <header>
             <Header />
-          </header>
 
           <Routes>
             {/* Redirection de l'index vers l'accueil */}
@@ -37,6 +37,7 @@ function App() {
             <Route path="/inscription" element={<Inscription />} />
             <Route path="/form-auth" element={<FormAuth />} />
             <Route path="/profil-utilisateur" element={<Profil />} />
+            <Route path="/page-produit/:id" element={<PageProduit />} /> {/* Route dynamique pour la page produit */}
 
             {/* Routes réservées aux administrateurs */}
             <Route
@@ -86,6 +87,7 @@ function App() {
           </footer>
         </Router>
       </UserProvider>
+      </header>
     </>
   );
 }

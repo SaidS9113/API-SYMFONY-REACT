@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import api from "../api";
+import { Link } from "react-router-dom"; // Importez Link depuis react-router-dom
+import api from "../api"; // Assurez-vous que l'API est correctement configurée
 
 function Boutique() {
   const [produits, setProduits] = useState([]);
@@ -79,16 +80,21 @@ function Boutique() {
             key={produit.id}
             className="border rounded-lg shadow p-4 flex flex-col items-center"
           >
-            <img
-  src={`http://localhost:8000${produit.image_url}`}
-  alt={produit.nom}
-  className="w-full h-40 object-cover mb-4 rounded"
-  onError={(e) => {
-    e.target.src = "https://via.placeholder.com/150"; // Remplace si l'image est introuvable
-  }}
-/>
+            <Link to={`/page-produit/${produit.id}`} className="w-full">  {/* Ajout de w-full */}
+  <img
+    src={`http://localhost:8000${produit.image_url}`}
+    alt={produit.nom}
+    className="w-full h-40 object-cover mb-4 rounded"
+    onError={(e) => {
+      e.target.src = "https://via.placeholder.com/150";
+    }}
+  />
+</Link>
 
-            <h2 className="text-lg font-semibold">{produit.nom}</h2>
+
+            <Link to={`/page-produit/${produit.id}`}>  {/* Ajout du lien pour rediriger vers la page produit */}
+              <h2 className="text-lg font-semibold">{produit.nom}</h2>
+            </Link>
             <p className="text-sm text-gray-600 mb-2">{produit.description}</p>
             <p className="text-xl font-bold text-orange-600">{produit.prix} €</p>
           </div>
