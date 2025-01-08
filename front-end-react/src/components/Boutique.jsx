@@ -87,7 +87,7 @@ function Boutique() {
     e.target.src = "https://via.placeholder.com/150"; // Remplace si l'image est introuvable
   }}
 />
-<p>{`http://localhost:8000${produit.image_url}`}</p>
+
             <h2 className="text-lg font-semibold">{produit.nom}</h2>
             <p className="text-sm text-gray-600 mb-2">{produit.description}</p>
             <p className="text-xl font-bold text-orange-600">{produit.prix} €</p>
