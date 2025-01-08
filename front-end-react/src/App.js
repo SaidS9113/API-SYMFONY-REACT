@@ -16,79 +16,82 @@ import Footer from "./components/Footer";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectionRoute";
 import { UserProvider } from "./components/UserContext";
+import { PanierProvider } from "./PanierContext"; // Importer le PanierProvider
 import "./assets/css/style.css";
 
 function App() {
   return (
-    <>
-    <header>
+    <PanierProvider> {/* Déplacer ici pour englobler tous les composants qui utilisent PanierContext */}
       <UserProvider>
         <Router>
+          <header>
             <Header />
+          </header>
 
-          <Routes>
-            {/* Redirection de l'index vers l'accueil */}
-            <Route path="/" element={<Navigate to="/accueil" replace />} />
+          <main>
+            <Routes>
+              {/* Redirection de l'index vers l'accueil */}
+              <Route path="/" element={<Navigate to="/accueil" replace />} />
 
-            {/* Routes accessibles à tout le monde */}
-            <Route path="/accueil" element={<Accueil />} />
-            <Route path="/boutique" element={<Boutique />} />
-            <Route path="/panier" element={<Panier />} />
-            <Route path="/inscription" element={<Inscription />} />
-            <Route path="/form-auth" element={<FormAuth />} />
-            <Route path="/profil-utilisateur" element={<Profil />} />
-            <Route path="/page-produit/:id" element={<PageProduit />} /> {/* Route dynamique pour la page produit */}
+              {/* Routes accessibles à tout le monde */}
+              <Route path="/accueil" element={<Accueil />} />
+              <Route path="/boutique" element={<Boutique />} />
+              <Route path="/panier" element={<Panier />} />
+              <Route path="/inscription" element={<Inscription />} />
+              <Route path="/form-auth" element={<FormAuth />} />
+              <Route path="/profil-utilisateur" element={<Profil />} />
+              <Route path="/page-produit/:id" element={<PageProduit />} /> {/* Route dynamique pour la page produit */}
 
-            {/* Routes réservées aux administrateurs */}
-            <Route
-              path="/liste-vehicule"
-              element={
-                <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                  <ListeProduit />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/liste-categorie"
-              element={
-                <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                  <ListeCategorie />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ajout-vehicule-categorie"
-              element={
-                <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                  <AjoutProduit />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ModificationProduit/:id"
-              element={
-                <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                  <ModificationProduit />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ModificationCategorie/:id"
-              element={
-                <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                  <ModificationCategorie />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+              {/* Routes réservées aux administrateurs */}
+              <Route
+                path="/liste-vehicule"
+                element={
+                  <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                    <ListeProduit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/liste-categorie"
+                element={
+                  <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                    <ListeCategorie />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ajout-vehicule-categorie"
+                element={
+                  <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                    <AjoutProduit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ModificationProduit/:id"
+                element={
+                  <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                    <ModificationProduit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ModificationCategorie/:id"
+                element={
+                  <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                    <ModificationCategorie />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
 
           <footer>
             <Footer />
           </footer>
         </Router>
       </UserProvider>
-      </header>
-    </>
+    </PanierProvider>
   );
 }
 
