@@ -30,7 +30,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/front-end-react/node_modules/
 /.pnp
 .pnp.js
 
@@ -38,7 +38,7 @@
 /coverage
 
 # production
-/build
+/front-end-react/build/
 
 # misc
 .DS_Store
