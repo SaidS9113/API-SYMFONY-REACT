@@ -18,6 +18,7 @@
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6.1",
         "phpstan/phpdoc-parser": "^2.0",
+        "stripe/stripe-php": "^16.4",
         "symfony/amphp-http-client-meta": "^1.0",
         "symfony/asset": "7.2.*",
         "symfony/console": "7.2.*",
