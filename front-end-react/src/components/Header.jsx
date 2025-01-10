@@ -1,19 +1,19 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "./UserContext";
-import { PanierContext } from "../PanierContext"; // Importation correcte du PanierContext
+import { PanierContext } from "../PanierContext"; // Assurez-vous d'importer correctement le PanierContext
 import { Link } from "react-router-dom";
 
 function Header() {
-  const { user, logout } = useContext(UserContext);  // Accéder au UserContext
-  const { panierQuantite } = useContext(PanierContext); // Utilisation de panierQuantite depuis PanierContext
+  const { user, logout } = useContext(UserContext);
+  const { panierQuantite, ajouterAuPanier, supprimerDuPanier } = useContext(PanierContext); // Utiliser le PanierContext
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();  // Déconnexion de l'utilisateur
+    logout();
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);  // Ouverture et fermeture du menu mobile
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -97,8 +97,84 @@ function Header() {
                 </svg>
               </Link>
             </div>
+
+            <button
+              className="block 2xl:hidden focus:outline-none"
+              onClick={toggleMenu}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Menu mobile */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-50 2xl:hidden">
+            <div className="fixed inset-0 bg-black opacity-50" onClick={toggleMenu}></div>
+            <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-lg">
+              <div className="p-4">
+                <button onClick={toggleMenu} className="mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <ul className="space-y-4">
+                  <li>
+                    <Link to="/accueil" onClick={toggleMenu}>Accueil</Link>
+                  </li>
+                  <li>
+                    <Link to="/boutique" onClick={toggleMenu}>Boutique</Link>
+                  </li>
+                  {user.isAdmin && (
+                    <>
+                      <li>
+                        <Link to="/liste-vehicule" onClick={toggleMenu}>Liste Véhicule</Link>
+                      </li>
+                      <li>
+                        <Link to="/liste-categorie" onClick={toggleMenu}>Liste Catégorie</Link>
+                      </li>
+                      <li>
+                        <Link to="/ajout-vehicule-categorie" onClick={toggleMenu}>Ajout Véhicule</Link>
+                      </li>
+                    </>
+                  )}
+                  <li>
+                    <Link
+                      to={user.isAuthenticated ? "/profil-utilisateur" : "/form-auth"}
+                      onClick={toggleMenu}
+                    >
+                      {user.isAuthenticated ? "Profil" : "Connexion"}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
     </div>
   );
