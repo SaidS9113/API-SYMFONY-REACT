@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Importez Link depuis react-router-dom
 import api from "../api"; // Assurez-vous que l'API est correctement configurée
 
+
 function Boutique() {
   const [produits, setProduits] = useState([]);
   const [loading, setLoading] = useState(true);

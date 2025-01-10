@@ -1,19 +1,19 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 // Créer le contexte du panier
 export const PanierContext = createContext();
 
-// Le PanierProvider sera un composant qui enveloppe l'application et fournit les informations du panier
+// Le PanierProvider enveloppe l'application pour fournir les informations du panier
 export const PanierProvider = ({ children }) => {
   const [panier, setPanier] = useState([]);
   const [panierQuantite, setPanierQuantite] = useState(0);
 
-  // Fonction pour récupérer le panier depuis le localStorage
+  // Fonction pour charger le panier depuis le localStorage
   const chargerPanierDepuisLocalStorage = () => {
     const panierStocke = JSON.parse(localStorage.getItem("panier")) || [];
     setPanier(panierStocke);
 
-    // Calculer la quantité totale dans le panier
+    // Met à jour la quantité totale des articles
     const totalQuantite = panierStocke.reduce((total, item) => total + item.quantite, 0);
     setPanierQuantite(totalQuantite);
   };
@@ -21,56 +21,54 @@ export const PanierProvider = ({ children }) => {
   // Fonction pour ajouter un produit au panier
   const ajouterAuPanier = (produit) => {
     const panierMiseAJour = [...panier];
-    const index = panierMiseAJour.findIndex(item => item.id === produit.id);
+    const index = panierMiseAJour.findIndex((item) => item.id === produit.id);
 
     if (index !== -1) {
+      // Si le produit existe déjà, augmenter la quantité
       panierMiseAJour[index].quantite += 1;
     } else {
+      // Sinon, ajouter un nouveau produit avec une quantité de 1
       panierMiseAJour.push({ ...produit, quantite: 1 });
     }
 
-    // Mettre à jour le panier dans le state
-    setPanier(panierMiseAJour);
-    setPanierQuantite(panierMiseAJour.reduce((total, item) => total + item.quantite, 0));
-
-    // Sauvegarder le panier dans le localStorage
-    localStorage.setItem("panier", JSON.stringify(panierMiseAJour));
+    // Mettre à jour le state et sauvegarder
+    mettreAJourPanier(panierMiseAJour);
   };
 
   // Fonction pour supprimer un produit du panier
   const supprimerDuPanier = (id) => {
-    const panierMiseAJour = panier.filter(item => item.id !== id);
-
-    // Mettre à jour le panier dans le state
-    setPanier(panierMiseAJour);
-    setPanierQuantite(panierMiseAJour.reduce((total, item) => total + item.quantite, 0));
-
-    // Sauvegarder le panier mis à jour dans le localStorage
-    localStorage.setItem("panier", JSON.stringify(panierMiseAJour));
+    const panierMiseAJour = panier.filter((item) => item.id !== id);
+    mettreAJourPanier(panierMiseAJour);
   };
 
-  // Charger le panier au démarrage de l'application
+  // Fonction générique pour mettre à jour le panier
+  const mettreAJourPanier = (nouveauPanier) => {
+    setPanier(nouveauPanier);
+
+    // Mettre à jour la quantité totale
+    const totalQuantite = nouveauPanier.reduce((total, item) => total + item.quantite, 0);
+    setPanierQuantite(totalQuantite);
+
+    // Sauvegarder dans localStorage
+    localStorage.setItem("panier", JSON.stringify(nouveauPanier));
+  };
+
+  // Charger le panier au premier rendu
   useEffect(() => {
     chargerPanierDepuisLocalStorage();
   }, []);
 
-  // Utiliser un useEffect pour surveiller les changements du panier et mettre à jour localStorage
-  useEffect(() => {
-    if (panier.length > 0) {
-      // Enregistrer le panier et la quantité dans le localStorage à chaque mise à jour
-      localStorage.setItem("panier", JSON.stringify(panier));
-      const totalQuantite = panier.reduce((total, item) => total + item.quantite, 0);
-      setPanierQuantite(totalQuantite);
-    }
-  }, [panier]); // Re-exécuter chaque fois que panier change
-
-  // Fournir le panier, la quantité, et les fonctions d'ajout/suppression à toute l'application
   return (
-    <PanierContext.Provider value={{ panierQuantite, panier, ajouterAuPanier, supprimerDuPanier }}>
+    <PanierContext.Provider 
+      value={{ 
+        panier, 
+        setPanier: mettreAJourPanier,
+        panierQuantite, 
+        ajouterAuPanier, 
+        supprimerDuPanier 
+      }}
+    >
       {children}
     </PanierContext.Provider>
   );
 };
-
-// Ajoutez l'exportation de usePanier si vous souhaitez l'utiliser dans d'autres composants
-export const usePanier = () => useContext(PanierContext);

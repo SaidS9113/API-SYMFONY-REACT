@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { PanierContext } from "../PanierContext";
 
 function Panier() {
-  const [panier, setPanier] = useState([]);
+  const panierContext = useContext(PanierContext);
+  
+  if (!panierContext) {
+    throw new Error("Panier must be used within a PanierProvider");
+  }
 
-  useEffect(() => {
-    const panierStocke = JSON.parse(localStorage.getItem("panier")) || [];
-    setPanier(panierStocke);
-  }, []);
+  const { panier, setPanier } = panierContext;
 
   const modifierQuantite = (id, increment) => {
     const nouveauPanier = panier.map((item) => {
       if (item.id === id) {
         const nouvelleQuantite = item.quantite + increment;
-        return { ...item, quantite: Math.max(nouvelleQuantite, 1) }; // Quantité minimum : 1
+        return { ...item, quantite: Math.max(nouvelleQuantite, 1) };
       }
       return item;
     });
@@ -32,17 +34,14 @@ function Panier() {
 
   const procederAuPaiement = () => {
     alert("Redirection vers la page de paiement !");
-    // Logique de redirection ou d'intégration avec un service de paiement
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* En-tête fixe */}
       <div className="bg-white shadow-md py-4 sticky top-0 z-10">
         <h1 className="text-2xl font-bold text-gray-800 text-center">Votre Panier</h1>
       </div>
 
-      {/* Contenu principal avec défilement */}
       <div className="flex-1 py-6 px-4 flex justify-center overflow-hidden">
         <div className="w-[85%]">
           {panier.length > 0 ? (
@@ -134,7 +133,6 @@ function Panier() {
         </div>
       </div>
 
-      {/* Pied de page fixe avec le sous-total et le bouton de paiement */}
       {panier.length > 0 && (
         <div className="bg-white shadow-md py-4 px-8 sticky bottom-0 z-10">
           <div className="w-[85%] mx-auto flex justify-between items-center">
@@ -155,5 +153,3 @@ function Panier() {
 }
 
 export default Panier;
-
-
