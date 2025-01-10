@@ -8,6 +8,18 @@ function Panier() {
     setPanier(panierStocke);
   }, []);
 
+  const modifierQuantite = (id, increment) => {
+    const nouveauPanier = panier.map((item) => {
+      if (item.id === id) {
+        const nouvelleQuantite = item.quantite + increment;
+        return { ...item, quantite: Math.max(nouvelleQuantite, 1) }; // Quantité minimum : 1
+      }
+      return item;
+    });
+    setPanier(nouveauPanier);
+    localStorage.setItem("panier", JSON.stringify(nouveauPanier));
+  };
+
   const supprimerProduit = (id) => {
     const nouveauPanier = panier.filter((item) => item.id !== id);
     setPanier(nouveauPanier);
@@ -81,7 +93,21 @@ function Panier() {
                           {item.description}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800">
-                          {item.quantite}
+                          <div className="flex items-center justify-center space-x-2">
+                            <button
+                              className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                              onClick={() => modifierQuantite(item.id, -1)}
+                            >
+                              -
+                            </button>
+                            <span>{item.quantite}</span>
+                            <button
+                              className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                              onClick={() => modifierQuantite(item.id, 1)}
+                            >
+                              +
+                            </button>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-right">
                           {item.prix.toFixed(2)} €
@@ -129,3 +155,5 @@ function Panier() {
 }
 
 export default Panier;
+
+
