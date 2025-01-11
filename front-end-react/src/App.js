@@ -11,18 +11,25 @@ import Inscription from "./components/Inscription";
 import Panier from "./components/Panier";
 import Profil from "./components/Profil";
 import PageProduit from "./components/PageProduit";
+import ProduitBugatti from "./components/ProduitBugatti";
+import CheckoutForm from "./components/CheckoutForm";
 import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectionRoute";
 import { UserProvider } from "./components/UserContext";
 import { PanierProvider } from "./PanierContext";
+import { Elements } from "@stripe/react-stripe-js"; 
+import { loadStripe } from "@stripe/stripe-js"; 
 import "./assets/css/style.css";
+
+const stripePromise = loadStripe("pk_test_51QfKrtGYlym3LEYwksBSpsJGVIPXpJEN50Lz8RWCjVuAn0PwoUMEdjiD40TpTPPJ7CrzWKuhP1PmOoy77asvQ7Dv00PddWWT60");
 
 function App() {
   return (
     <UserProvider>
       <PanierProvider>
+      <Elements stripe={stripePromise}> {/* Fournisseur Stripe */}
         <Router>
           <div className="flex flex-col min-h-screen">
             <header>
@@ -42,6 +49,8 @@ function App() {
                 <Route path="/form-auth" element={<FormAuth />} />
                 <Route path="/profil-utilisateur" element={<Profil />} />
                 <Route path="/page-produit/:id" element={<PageProduit />} />
+                <Route path="/produit-bugatti" element={<ProduitBugatti />} />
+                <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
 
                 {/* Routes réservées aux administrateurs */}
                 <Route
@@ -92,6 +101,7 @@ function App() {
             </footer>
           </div>
         </Router>
+        </Elements>
       </PanierProvider>
     </UserProvider>
   );

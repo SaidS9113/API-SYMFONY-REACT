@@ -1,99 +1,129 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Importez Link depuis react-router-dom
-import api from "../api"; // Assurez-vous que l'API est correctement configurée
+import { Link } from "react-router-dom";
+import api from "../api";
 
+// Import des images locales
+import bugattiImage from "../assets/img/bugattiProduct.jpg";
+import porscheImage from "../assets/img/porsheProduct.webp";
+import bmwImage from "../assets/img/bmwProduct.jpg";
+import toyotaImage from "../assets/img/ToyotaProduct.jpg";
 
 function Boutique() {
-  const [produits, setProduits] = useState([]);
+  const produitsFictifs = [
+    {
+      id: 1,
+      nom: "Bugatti Chiron Super Sport 300+",
+      description: "Hypercar de luxe ultra-puissante.",
+      prix: 4000001,
+      image_url: bugattiImage,
+      redirection_url: "/produit-bugatti", // URL fixe pour ce produit
+    },
+    {
+      id: 2,
+      nom: "Porsche 911 Turbo S",
+      description: "Voiture sportive, performante et élégante.",
+      prix: 300000,
+      image_url: porscheImage,
+      redirection_url: "/produit-porsche", // URL fixe pour ce produit
+    },
+    {
+      id: 3,
+      nom: "BMW M5 Competition",
+      description: "Berline sportive avec 625 chevaux.",
+      prix: 150000,
+      image_url: bmwImage,
+      redirection_url: "/produit-bmw", // URL fixe pour ce produit
+    },
+    {
+      id: 4,
+      nom: "Toyota RAV4 Hybrid",
+      description: "SUV hybride polyvalent et économique.",
+      prix: 40000,
+      image_url: toyotaImage,
+      redirection_url: "/produit-toyota", // URL fixe pour ce produit
+    },
+  ];
+
+  const [produits, setProduits] = useState(produitsFictifs); // Initialisation avec les produits fictifs
+  const [imageUrls, setImageUrls] = useState({}); // Stocke les URLs des images à afficher
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  useEffect(() => {
+    // Initialise les URLs des images avec les images locales
+    const initialImageUrls = produitsFictifs.reduce((acc, produit) => {
+      acc[produit.id] = produit.image_url; // Associe chaque produit à son image locale
+      return acc;
+    }, {});
+    setImageUrls(initialImageUrls);
+  }, []);
+
   const fetchProduits = async (page) => {
     try {
+      setLoading(true); // Démarre le chargement
       const response = await api.get(`/product?page=${page}&limit=10`);
       const newProducts = response.data;
 
       if (newProducts.length === 0) {
         setHasMore(false);
+        setError("Aucun produit trouvé.");
       } else {
-        setProduits((prevProduits) => {
-          const allProducts = [...prevProduits, ...newProducts];
-          const uniqueProducts = allProducts.filter(
-            (product, index, self) =>
-              index === self.findIndex((p) => p.id === product.id)
-          );
-          return uniqueProducts;
-        });
+        // Lorsque la base de données fonctionne, les URLs dynamiques sont utilisées
+        const updatedProducts = newProducts.map((product) => ({
+          ...product,
+          redirection_url: `/page-produit/${product.id}`,
+        }));
+        setProduits(updatedProducts);
+
+        // Met à jour les URLs des images avec celles provenant de la base de données
+        const updatedImageUrls = newProducts.reduce((acc, produit) => {
+          acc[produit.id] = `http://localhost:8000${produit.image_url}`;
+          return acc;
+        }, {});
+        setImageUrls((prevImageUrls) => ({
+          ...prevImageUrls,
+          ...updatedImageUrls,
+        }));
       }
     } catch (err) {
       console.error("Erreur :", err);
-      setError("La base de données sera intégrée lors de la finalisation du site");
+      setError("");
     } finally {
-      setLoading(false);
+      setLoading(false); // Arrête le chargement une fois la requête terminée
     }
   };
 
   useEffect(() => {
-    const cachedProduits = localStorage.getItem("produits");
-    if (cachedProduits) {
-      setProduits(JSON.parse(cachedProduits));
-      setLoading(false);
-    } else {
-      fetchProduits(page);
-    }
+    fetchProduits(page);
   }, [page]);
-
-  if (loading && produits.length === 0) {
-    return (
-      <div className="p-4 text-center">
-        <h1 className="text-4xl font-bold mb-4">Chargement...</h1>
-        <p>Veuillez patienter pendant que nous chargeons les produits.</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <h1 className="text-4xl font-bold mb-4 text-center">Boutique</h1>
-        <p className="text-center text-red-500 mb-4">{error}</p>
-      </div>
-    );
-  }
-
-  if (produits.length === 0) {
-    return (
-      <div className="p-4">
-        <h1 className="text-4xl font-bold mb-4 text-center">Boutique</h1>
-        <p className="text-center">Aucun produit disponible pour le moment.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="p-4">
       <h1 className="text-4xl font-bold mb-10 text-center">Boutique</h1>
+      {error && (
+        <p className="text-center text-red-500 mb-4">{error}</p>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {produits.map((produit) => (
           <div
             key={produit.id}
             className="border rounded-lg shadow p-4 flex flex-col items-center"
           >
-            <Link to={`/page-produit/${produit.id}`} className="w-full">  {/* Ajout de w-full */}
-  <img
-    src={`http://localhost:8000${produit.image_url}`}
-    alt={produit.nom}
-    className="w-full h-40 object-cover mb-4 rounded"
-    onError={(e) => {
-      e.target.src = "https://via.placeholder.com/150";
-    }}
-  />
-</Link>
+            <Link to={produit.redirection_url} className="w-full">
+              <img
+                // Utilise l'URL stockée dans `imageUrls` pour chaque produit
+                src={imageUrls[produit.id] || "https://via.placeholder.com/150"} // Image de secours si aucune URL
+                alt={produit.nom}
+                className="w-full h-40 object-cover mb-4 rounded"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/150"; // Si l'image échoue à se charger
+                }}
+              />
+            </Link>
 
-
-            <Link to={`/page-produit/${produit.id}`}>  {/* Ajout du lien pour rediriger vers la page produit */}
+            <Link to={produit.redirection_url}>
               <h2 className="text-lg font-semibold">{produit.nom}</h2>
             </Link>
             <p className="text-sm text-gray-600 mb-2">{produit.description}</p>

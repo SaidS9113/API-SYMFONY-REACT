@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { PanierContext } from "../PanierContext";
+import { useNavigate } from "react-router-dom";
 
 function Panier() {
   const panierContext = useContext(PanierContext);
-  
+  const navigate = useNavigate();
+
   if (!panierContext) {
     throw new Error("Panier must be used within a PanierProvider");
   }
@@ -33,7 +35,8 @@ function Panier() {
   };
 
   const procederAuPaiement = () => {
-    alert("Redirection vers la page de paiement !");
+    // Redirection vers la page de paiement Stripe
+    navigate("/formulaire-paiement-stripe");
   };
 
   return (
@@ -75,13 +78,11 @@ function Panier() {
                       <tr key={item.id}>
                         <td className="px-6 py-4 whitespace-nowrap w-[200px]">
                           <div className="w-[200px] h-[100px]">
+                            {/* Récupération de l'image à partir de l'objet panier */}
                             <img
-                              src={`http://localhost:8000${item.imageUrl}`}
+                              src={item.imageUrl} // Utilisation de l'URL de l'image directement
                               alt={item.nom}
                               className="w-full h-full object-cover rounded-lg"
-                              onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/200x100";
-                              }}
                             />
                           </div>
                         </td>
