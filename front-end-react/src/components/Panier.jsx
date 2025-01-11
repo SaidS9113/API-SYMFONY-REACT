@@ -78,7 +78,7 @@ function Panier() {
                       <tr key={item.id}>
                         <td className="px-6 py-4 whitespace-nowrap w-[200px]">
                           <div className="w-[200px] h-[100px]">
-                            {/* Récupération de l'image à partir de l'objet panier */}
+                            {/* Affichage de l'image sans gestion d'erreur */}
                             <img
                               src={item.imageUrl} // Utilisation de l'URL de l'image directement
                               alt={item.nom}
