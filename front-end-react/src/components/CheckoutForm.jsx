@@ -6,6 +6,7 @@ function CheckoutForm() {
   const elements = useElements();
   const [panier, setPanier] = useState([]);
   const [loading, setLoading] = useState(false);
+  const BASE_URL = "http://localhost:8000";
 
   useEffect(() => {
     // Récupérer les produits du panier depuis localStorage
@@ -106,6 +107,14 @@ function CheckoutForm() {
     <PaymentRequestButtonElement options={prButtonOptions} />
   ) : null;
 
+  // Fonction pour déterminer l'URL correcte de l'image
+  const getImageUrl = (imageUrl) => {
+    if (imageUrl && imageUrl.startsWith("/uploads")) {
+      return `${BASE_URL}${imageUrl}`;
+    }
+    return imageUrl;
+  };
+
   return (
     <>
       <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center mt-10">Paiement</h1>
@@ -120,7 +129,7 @@ function CheckoutForm() {
                 {/* Utiliser l'URL correcte pour l'image */}
                 <div className="flex">
                   <img
-                    src={`http://localhost:8000${item.imageUrl}`} // L'image est récupérée directement à partir du localStorage
+                    src={getImageUrl(item.imageUrl)} // L'image est récupérée directement à partir du localStorage
                     alt={item.nom}
                     className="w-16 h-16 object-cover mr-4"
                   />

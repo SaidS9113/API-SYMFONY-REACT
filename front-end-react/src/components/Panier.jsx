@@ -5,12 +5,30 @@ import { useNavigate } from "react-router-dom";
 function Panier() {
   const panierContext = useContext(PanierContext);
   const navigate = useNavigate();
+  const BASE_URL = "http://localhost:8000";
 
   if (!panierContext) {
     throw new Error("Panier must be used within a PanierProvider");
   }
 
   const { panier, setPanier } = panierContext;
+
+  // Fonction pour déterminer la source de l'image
+  const getImageUrl = (item) => {
+    if (item.imageUrl) {
+      if (item.imageUrl.startsWith("/uploads")) {
+        return `${BASE_URL}${item.imageUrl}`;
+      }
+      return item.imageUrl;
+    }
+    const localPanier = JSON.parse(localStorage.getItem("panier")) || [];
+    const localItem = localPanier.find((p) => p.id === item.id);
+    const imageUrl = localItem?.imageUrl || "/default-image.jpg";
+    if (imageUrl.startsWith("/uploads")) {
+      return `${BASE_URL}${imageUrl}`;
+    }
+    return imageUrl;
+  };
 
   const modifierQuantite = (id, increment) => {
     const nouveauPanier = panier.map((item) => {
@@ -35,7 +53,6 @@ function Panier() {
   };
 
   const procederAuPaiement = () => {
-    // Redirection vers la page de paiement Stripe
     navigate("/formulaire-paiement-stripe");
   };
 
@@ -46,86 +63,129 @@ function Panier() {
       </div>
 
       <div className="flex-1 py-6 px-4 flex justify-center overflow-hidden">
-        <div className="w-[85%]">
+        <div className="w-[95%]">
           {panier.length > 0 ? (
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <div className="overflow-x-auto max-h-[calc(100vh-250px)] overflow-y-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Image
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Description
-                      </th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Quantité
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prix
-                      </th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {panier.map((item) => (
-                      <tr key={item.id}>
-                        <td className="px-6 py-4 whitespace-nowrap w-[200px]">
-                          <div className="w-[200px] h-[100px]">
-                            {/* Affichage de l'image sans gestion d'erreur */}
-                            <img
-                              src={item.imageUrl} // Utilisation de l'URL de l'image directement
-                              alt={item.nom}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                          {item.nom}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {item.description}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800">
-                          <div className="flex items-center justify-center space-x-2">
-                            <button
-                              className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
-                              onClick={() => modifierQuantite(item.id, -1)}
-                            >
-                              -
-                            </button>
-                            <span>{item.quantite}</span>
-                            <button
-                              className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
-                              onClick={() => modifierQuantite(item.id, 1)}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-right">
-                          {item.prix.toFixed(2)} €
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+            <>
+              {/* Affichage sous forme de carte pour mobile */}
+              <div className="block md:hidden">
+                {panier.map((item) => (
+                  <div key={item.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
+                    <div className="flex items-center">
+                      <img
+                        src={getImageUrl(item)}
+                        alt={item.nom}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div className="ml-4">
+                        <p className="text-lg font-semibold text-gray-800">{item.nom}</p>
+                        <p className="text-sm text-gray-600">{item.description}</p>
+                        <div className="flex items-center space-x-2 mt-2">
                           <button
-                            className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-                            onClick={() => supprimerProduit(item.id)}
+                            className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                            onClick={() => modifierQuantite(item.id, -1)}
                           >
-                            Supprimer
+                            -
                           </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          <span>{item.quantite}</span>
+                          <button
+                            className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                            onClick={() => modifierQuantite(item.id, 1)}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-800 mt-2">{item.prix.toFixed(2)} €</p>
+                        <button
+                          className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 mt-4"
+                          onClick={() => supprimerProduit(item.id)}
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+
+              {/* Affichage sous forme de tableau pour tablette et PC */}
+              <div className="hidden md:block bg-white shadow-md rounded-lg overflow-hidden">
+                <div className="overflow-x-auto max-h-[calc(100vh-250px)] overflow-y-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Image
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Nom
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Description
+                        </th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Quantité
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Prix
+                        </th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {panier.map((item) => (
+                        <tr key={item.id}>
+                          <td className="px-6 py-4 whitespace-nowrap w-[200px]">
+                            <div className="w-[200px] h-[100px]">
+                              <img
+                                src={getImageUrl(item)}
+                                alt={item.nom}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                            {item.nom}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {item.description}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800">
+                            <div className="flex items-center justify-center space-x-2">
+                              <button
+                                className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                                onClick={() => modifierQuantite(item.id, -1)}
+                              >
+                                -
+                              </button>
+                              <span>{item.quantite}</span>
+                              <button
+                                className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                                onClick={() => modifierQuantite(item.id, 1)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-right">
+                            {item.prix.toFixed(2)} €
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <button
+                              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
+                              onClick={() => supprimerProduit(item.id)}
+                            >
+                              Supprimer
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
           ) : (
             <div className="bg-white shadow-md rounded-lg p-6 flex items-center justify-center h-[200px]">
               <p className="text-gray-500 text-lg">Votre panier est vide. Ajoutez des produits pour continuer.</p>

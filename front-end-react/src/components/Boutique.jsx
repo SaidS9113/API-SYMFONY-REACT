@@ -16,31 +16,31 @@ function Boutique() {
       description: "Hypercar de luxe ultra-puissante.",
       prix: 4000001,
       image_url: bugattiImage,
-      redirection_url: "/produit-bugatti", // URL fixe pour ce produit
+      redirection_url: "/produit-bugatti-chiron", // URL fixe pour ce produit
     },
     {
       id: 2,
       nom: "Porsche 911 Turbo S",
       description: "Voiture sportive, performante et élégante.",
-      prix: 300000,
+      prix: 300001,
       image_url: porscheImage,
-      redirection_url: "/produit-porsche", // URL fixe pour ce produit
+      redirection_url: "/produit-porche-911", // URL fixe pour ce produit
     },
     {
       id: 3,
       nom: "BMW M5 Competition",
       description: "Berline sportive avec 625 chevaux.",
-      prix: 150000,
+      prix: 150001,
       image_url: bmwImage,
-      redirection_url: "/produit-bmw", // URL fixe pour ce produit
+      redirection_url: "/produit-produit-BMW_5", // URL fixe pour ce produit
     },
     {
       id: 4,
       nom: "Toyota RAV4 Hybrid",
       description: "SUV hybride polyvalent et économique.",
-      prix: 40000,
+      prix: 40001,
       image_url: toyotaImage,
-      redirection_url: "/produit-toyota", // URL fixe pour ce produit
+      redirection_url: "/produit-toyota-RAV4", // URL fixe pour ce produit
     },
   ];
 

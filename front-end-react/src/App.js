@@ -11,7 +11,10 @@ import Inscription from "./components/Inscription";
 import Panier from "./components/Panier";
 import Profil from "./components/Profil";
 import PageProduit from "./components/PageProduit";
-import ProduitBugatti from "./components/ProduitBugatti";
+import ProduitBugattiChiron from "./components/ProduitBugattiChiron";
+import ProduitPorche911 from "./components/ProduitPorche911";
+import ProduitBMW_M5 from "./components/ProduitBMW_M5";
+import ProduitToyota_RAV4 from "./components/ProduitToyota_RAV4";
 import CheckoutForm from "./components/CheckoutForm";
 import Footer from "./components/Footer";
 
@@ -49,7 +52,10 @@ function App() {
                 <Route path="/form-auth" element={<FormAuth />} />
                 <Route path="/profil-utilisateur" element={<Profil />} />
                 <Route path="/page-produit/:id" element={<PageProduit />} />
-                <Route path="/produit-bugatti" element={<ProduitBugatti />} />
+                <Route path="/produit-bugatti-chiron" element={<ProduitBugattiChiron />} />
+                <Route path="/produit-porche-911" element={<ProduitPorche911 />} />
+                <Route path="/produit-produit-BMW_5" element={<ProduitBMW_M5 />} />
+                <Route path="/produit-toyota-RAV4" element={<ProduitToyota_RAV4 />} />
                 <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
 
                 {/* Routes réservées aux administrateurs */}

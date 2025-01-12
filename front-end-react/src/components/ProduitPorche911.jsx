@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
-import bugattiImage from "../assets/img/bugattiProduct.jpg";
+import PorsheImage from "../assets/img/porsheProduct.webp";
 import { PanierContext } from "../PanierContext"; // Import du contexte
 
-function ProduitBugatti() {
+function ProduitPorche911() {
   const produit = {
-    id: 1,
-    nom: "Bugatti Chiron Super Sport 300+",
-    description: "Hypercar de luxe ultra-puissante.",
-    prix: 4000000,
-    imageUrl: bugattiImage, // Utilisation de l'image importée
+    id: 2,
+    nom: "Porshe 911 Turbo S",
+    description: "Voiture sportive.",
+    prix: 300001,
+    imageUrl: PorsheImage, // Utilisation de l'image importée
   };
 
   const { ajouterAuPanier } = useContext(PanierContext); // Utilisation du contexte
@@ -45,4 +45,4 @@ function ProduitBugatti() {
   );
 }
 
-export default ProduitBugatti;
+export default ProduitPorche911;

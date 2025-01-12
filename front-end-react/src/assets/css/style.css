@@ -2,6 +2,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Spectral'; 
+}
+
+/* Configuration du body */
+body {
+  font-size: 1rem; 
+  line-height: 1.5; 
+  background-color: #f9fafb; 
+  color: #333; 
+  overflow-x: hidden;
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column; 
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20px; 
+}
+
 .Logo {
   font-size: 2rem;
   font-weight: bold;
