@@ -37,7 +37,7 @@ function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white flex flex-col items-center justify-center py-10">
+    <div className="min-h-screen bg-[#111111] text-white flex flex-col items-center justify-center py-10 mt-[50px] pt-[60px]">
       <div className="bg-[#222222] p-8 rounded-lg shadow-lg w-full max-w-lg">
         <h1 className="text-3xl font-bold text-center mb-6">Contact</h1>
         <p className="text-center mb-6">

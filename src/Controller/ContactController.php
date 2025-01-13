@@ -48,7 +48,7 @@ class ContactController extends AbstractController
         // Créer l'email pour notifier l'administrateur
         $emailMessage = (new Email())
             ->from($email) // L'email de l'utilisateur
-            ->to('soidroudinesaid@hotmail.fr') // L'adresse email où vous voulez recevoir le message
+            ->to('soidroudinesaid51@gmail.com') // L'adresse email où vous voulez recevoir le message
             ->subject('Nouveau message de contact')
             ->text("Message reçu de : $email\n\n$message"); // Le contenu du message
 
