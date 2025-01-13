@@ -18,7 +18,7 @@ import ProduitBMW_M5 from "./components/ProduitBMW_M5";
 import ProduitToyota_RAV4 from "./components/ProduitToyota_RAV4";
 import CheckoutForm from "./components/CheckoutForm";
 import SectionProduit from "./components/SectionProduit";
-import Modal from "./components/Modal";
+import SectionProgressionVitesse from "./components/SectionProgressionVitesse.jsx";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -75,7 +75,7 @@ function App() {
                   <Route path="/produit-toyota-RAV4" element={<ProduitToyota_RAV4 />} />
                   <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
                   <Route path="/" element={<SectionProduit />} />
-                  <Route path="/" element={<Modal />} />
+                  <Route path="/" element={<SectionProgressionVitesse />} />
                   <Route path="/contact" element={<Contact />} />
 
                   {/* Routes réservées aux administrateurs */}

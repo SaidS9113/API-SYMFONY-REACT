@@ -100,7 +100,7 @@ function SectionProduit() {
   }, [page]);
 
   return (
-    <div className="p-[50px] bg-[#111111] text-white">
+    <div className="mt-[50px] bg-[#111111] text-white">
       <h1 className="text-4xl font-bold mb-10 text-center">Voitures les plus vendus</h1>
       {error && (
         <p className="text-center text-red-500 mb-4">{error}</p>

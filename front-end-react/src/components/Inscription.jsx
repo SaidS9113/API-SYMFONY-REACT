@@ -58,32 +58,32 @@ function Inscription() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-md w-full">
+        <div className="flex justify-center items-center min-h-screen bg-[#111111] text-white mt-[0px] md:mt-[70px] mr-[10px] ml-[10px]">
+            <div className="bg-[#111111] shadow-md rounded px-8 pt-6 pb-8 max-w-md w-full border-[1.5px]">
                 <h2 className="text-2xl font-bold text-center mb-6">Inscription</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label
                             htmlFor="email"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            >
+                            className="block text-white text-sm font-bold mb-2"
+                        >
                             Email :
-                            </label>
-                            <input
+                        </label>
+                        <input
                             id="email"
                             name="email"
                             type="email"
                             placeholder="Votre email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
                             htmlFor="password"
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-white text-sm font-bold mb-2"
                         >
                             Mot de passe :
                         </label>
@@ -94,14 +94,14 @@ function Inscription() {
                             placeholder="Votre mot de passe"
                             value={formData.password}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
                             htmlFor="confirmPassword"
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-white text-sm font-bold mb-2"
                         >
                             Confirmer le mot de passe :
                         </label>
@@ -112,14 +112,14 @@ function Inscription() {
                             placeholder="Confirmez votre mot de passe"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
                             htmlFor="nom"
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-white text-sm font-bold mb-2"
                         >
                             Nom :
                         </label>
@@ -130,14 +130,14 @@ function Inscription() {
                             placeholder="Votre nom"
                             value={formData.nom}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
                             htmlFor="prenom"
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-white text-sm font-bold mb-2"
                         >
                             Prénom :
                         </label>
@@ -148,14 +148,14 @@ function Inscription() {
                             placeholder="Votre prénom"
                             value={formData.prenom}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
                             htmlFor="adressePostal"
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-white text-sm font-bold mb-2"
                         >
                             Adresse Postale :
                         </label>
@@ -166,7 +166,7 @@ function Inscription() {
                             placeholder="Votre adresse postale"
                             value={formData.adressePostal}
                             onChange={handleChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
                     </div>
@@ -178,7 +178,7 @@ function Inscription() {
                             S'inscrire
                         </button>
                         <Link
-                            to="/login"
+                            to="/form-auth"
                             className="inline-block align-baseline text-sm text-blue-500 hover:text-blue-800"
                         >
                             Déjà un compte ? Connectez-vous
