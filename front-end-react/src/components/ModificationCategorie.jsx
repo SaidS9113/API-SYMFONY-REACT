@@ -54,7 +54,7 @@ function ModificationCategorie() {
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen bg-white mt-[100px] text-white">
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-md w-full">
                 <h1 className="text-2xl font-bold text-center mb-6">Modifier la catégorie</h1>
                 <form onSubmit={handleSubmit}>

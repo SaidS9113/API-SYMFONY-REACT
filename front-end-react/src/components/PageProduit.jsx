@@ -26,12 +26,12 @@ function PageProduit() {
     fetchProduit();
   }, [id]);
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>{error}</p>;
-  if (!produit) return <p>Produit introuvable.</p>;
+  if (loading) return <p className="text-white text-center">Chargement...</p>;
+  if (error) return <p className="text-red-500 text-center">{error}</p>;
+  if (!produit) return <p className="text-white text-center">Produit introuvable.</p>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-[#111111] text-white mt-[100px] pt-[100px] pb-[100px]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex flex-col items-center">
           <img
@@ -45,9 +45,9 @@ function PageProduit() {
         </div>
 
         <div className="flex flex-col justify-between">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-4">{produit.nom}</h1>
-          <p className="text-gray-600 mb-4">{produit.description}</p>
-          <p className="text-xl font-bold text-gray-800 mb-6">{produit.prix} €</p>
+          <h1 className="text-3xl font-semibold mb-4">{produit.nom}</h1>
+          <p className="mb-4">{produit.description}</p>
+          <p className="text-xl font-bold mb-6">{produit.prix} €</p>
           <button
             className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
             onClick={() => ajouterAuPanier({ ...produit, quantite: 1 })}

@@ -116,8 +116,8 @@ function CheckoutForm() {
   };
 
   return (
-    <>
-      <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center mt-10">Paiement</h1>
+    <div className="mt-[100px] text-white pt-[50px] pb-[200px]">
+      <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center text-white">Paiement</h1>
       <div className="w-full max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg flex flex-col lg:flex-row gap-5">
         
         {/* Section des informations du produit */}
@@ -134,11 +134,11 @@ function CheckoutForm() {
                     className="w-16 h-16 object-cover mr-4"
                   />
                   <div className="flex flex-col">
-                    <span className="font-semibold mb-2">{item.nom}</span> {/* Ajout du gap entre le nom et le prix */}
-                    <span>{item.prix} € x {item.quantite}</span>
+                    <span className="font-semibold mb-2 text-black">{item.nom}</span> {/* Ajout du gap entre le nom et le prix */}
+                    <span className="text-black">{item.prix} € x {item.quantite}</span>
                   </div>
                 </div>
-                <span className="font-semibold">{(item.prix * item.quantite).toFixed(2)} €</span>
+                <span className="font-semibold text-black">{(item.prix * item.quantite).toFixed(2)} €</span>
               </div>
             ))}
           </div>
@@ -175,7 +175,7 @@ function CheckoutForm() {
               <button
                 type="submit"
                 disabled={!stripe || loading}
-                className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="w-full py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
               >
                 {loading ? "Chargement..." : "Payer"}
               </button>
@@ -183,7 +183,7 @@ function CheckoutForm() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

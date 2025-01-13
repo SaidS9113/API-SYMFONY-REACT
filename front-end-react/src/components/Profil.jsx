@@ -142,79 +142,79 @@ function Profil() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800 text-center">Profil Utilisateur</h2>
+    <div className="max-w-3xl mx-auto p-6 bg-[#111111] shadow-md rounded-md mt-[100px] text-white">
+      <h2 className="text-2xl font-semibold mb-6 text-white text-center">Profil Utilisateur</h2>
       {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
       {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form className="text-white" onSubmit={handleSubmit}>
         <div className="space-y-4">
           <input type="hidden" name="id" value={formData.id} />
 
           <div className="flex items-center gap-2">
-            <label htmlFor="nom" className="w-24 text-gray-700 font-medium">Nom:</label>
+            <label htmlFor="nom" className="w-24 text-white-700 font-medium">Nom:</label>
             <input
               id="nom"
               name="nom"
               type="text"
               value={formData.nom}
               onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="prenom" className="w-24 text-gray-700 font-medium">Prénom:</label>
+            <label htmlFor="prenom" className="w-24 text-white-700 font-medium">Prénom:</label>
             <input
               id="prenom"
               name="prenom"
               type="text"
               value={formData.prenom}
               onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="adresse_postal" className="w-24 text-gray-700 font-medium">Adresse:</label>
+            <label htmlFor="adresse_postal" className="w-24 text-white-700 font-medium">Adresse:</label>
             <input
               id="adresse_postal"
               name="adresse_postal"
               type="text"
               value={formData.adresse_postal}
               onChange={(e) => setFormData({ ...formData, adresse_postal: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="email" className="w-24 text-gray-700 font-medium">Email:</label>
+            <label htmlFor="email" className="w-24 text-white-700 font-medium">Email:</label>
             <input
               id="email"
               name="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="old_password" className="w-24 text-gray-700 font-medium">Ancien:</label>
+            <label htmlFor="old_password" className="w-24 text-white-700 font-medium">Ancien:</label>
             <input
               id="old_password"
               name="old_password"
               type="password"
               value={formData.oldPassword}
               onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="new_password" className="w-24 text-gray-700 font-medium">Nouveau:</label>
+            <label htmlFor="new_password" className="w-24 text-white-700 font-medium">Nouveau:</label>
             <input
               id="new_password"
               name="new_password"
               type="password"
               value={formData.newPassword}
               onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-              className="w-full px-4 py-2 border rounded-md bg-gray-100"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
             />
           </div>
         </div>
@@ -229,14 +229,14 @@ function Profil() {
 
       <div className="mt-6">
         <div className="flex flex-col items-start">
-          <label htmlFor="passwordForDelete" className="w-full text-gray-700 font-medium">Mot de passe (pour supprimer le compte):</label>
+          <label htmlFor="passwordForDelete" className="w-full text-white-700 font-medium">Mot de passe (pour supprimer le compte):</label>
           <input
             id="passwordForDelete"
             name="passwordForDelete"
             type="password"
             value={formData.passwordForDelete}
             onChange={(e) => setFormData({ ...formData, passwordForDelete: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md bg-gray-100"
+            className="w-full px-4 py-2 border rounded-md bg-gray-100 text-black"
           />
           <button
             type="button"

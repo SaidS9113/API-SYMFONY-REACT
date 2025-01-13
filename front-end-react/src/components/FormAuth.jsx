@@ -46,13 +46,13 @@ function FormAuth() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-sm w-full mb-6 mt-[100px]">
+        <div className="flex flex-col items-center min-h-screen bg-[#111111] text-white mt-[100px]">
+            <div className="bg-[#111111] border-[5px] shadow-md rounded px-8 pt-6 pb-8 max-w-sm w-full mb-6 mt-[100px]">
                 <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
                 {errorMessage && (
                     <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
                 )}
-                <form onSubmit={handleSubmit}>
+                <form  onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label
                             htmlFor="email"
@@ -92,7 +92,7 @@ function FormAuth() {
                     <div className="flex items-center justify-between">
                         <button
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-indigo-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
                             Se connecter
                         </button>

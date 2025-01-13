@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
     return (
-        <footer className="bg-gray-900 text-white py-10">
+        <footer className="bg-[#111111] text-white py-10 bt border-t-[2.5px] border-t-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     {/* Section Links */}

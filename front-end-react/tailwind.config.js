@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Nunito', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'], 
+        sans: ['Spectral', 'serif'], 
       },
     },
   },

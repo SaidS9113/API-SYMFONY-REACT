@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import BChiron from "../assets/img/B-chiron.webp";
+import { Link } from "react-router-dom";
+import image1 from "../assets/img/porsheProduct.webp";
 import Image2 from "../assets/img/bugattiProduct.jpg";  // Ajoutez ici l'URL de votre deuxième image
-import Image3 from "../assets/img/porsheProduct.webp";  // Ajoutez ici l'URL de votre troisième image
-import Boutique from "./Boutique";
+import Image3 from "../assets/img/bmwProduct.jpg";  // Ajoutez ici l'URL de votre troisième image
+import SectionProduit from "./SectionProduit";
 
 function Accueil() {
     // État pour l'image du carrousel
     const [currentImage, setCurrentImage] = useState(0);
 
-    const images = [BChiron, Image2, Image3];  // Liste des images du carrousel
+    const images = [image1, Image2, Image3];  // Liste des images du carrousel
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,20 +24,20 @@ function Accueil() {
         <div className="relative">
             {/* Bannière */}
             <div
-                className="relative h-[80vh] bg-cover bg-center"
+                className="relative h-[100vh] bg-cover bg-center"
                 style={{ backgroundImage: `url(${images[currentImage]})` }}
             >
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="text-center text-white px-4">
                         <h1 className="text-4xl sm:text-6xl font-bold mb-4">Bienvenue sur notre site Véhicule</h1>
                         <p className="text-lg sm:text-xl mb-6">Découvrez les véhicules les plus célèbres au monde.</p>
-                        <a href="/boutique" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <Link to="/boutique" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             En savoir plus
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
-            <Boutique />
+            <SectionProduit />
         </div>
     );
 }

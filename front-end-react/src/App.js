@@ -16,6 +16,8 @@ import ProduitPorche911 from "./components/ProduitPorche911";
 import ProduitBMW_M5 from "./components/ProduitBMW_M5";
 import ProduitToyota_RAV4 from "./components/ProduitToyota_RAV4";
 import CheckoutForm from "./components/CheckoutForm";
+import SectionProduit from "./components/SectionProduit";
+import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -35,7 +37,7 @@ function App() {
       <Elements stripe={stripePromise}> {/* Fournisseur Stripe */}
         <Router>
           <div className="flex flex-col min-h-screen">
-            <header>
+            <header id="header">
               <Header />
             </header>
             
@@ -57,6 +59,8 @@ function App() {
                 <Route path="/produit-produit-BMW_5" element={<ProduitBMW_M5 />} />
                 <Route path="/produit-toyota-RAV4" element={<ProduitToyota_RAV4 />} />
                 <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
+                <Route path="/" element={<SectionProduit />} />
+                <Route path="/contact" element={<Contact />} />
 
                 {/* Routes réservées aux administrateurs */}
                 <Route

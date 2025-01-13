@@ -1,54 +1,45 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Spectral'; 
-}
-
-/* Configuration du body */
 body {
-  font-size: 1rem; 
-  line-height: 1.5; 
-  background-color: #f9fafb; 
-  color: #333; 
-  overflow-x: hidden;
-  min-height: 100vh; 
-  display: flex;
-  flex-direction: column; 
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0 20px; 
+  background-color: #111111;
 }
 
-.Logo {
+.header {
+  top: 0;
+  z-index: 200;
+  background-color: rgba(78, 78, 78, 0.0352941176);
+  position: fixed;
+  backdrop-filter: blur(10px); /* Effet de flou */
+  -webkit-backdrop-filter: blur(10px); /* Compatibilité avec Safari */
+}
+.header .Logo {
   font-size: 2rem;
   font-weight: bold;
 }
-.Logo a {
-  color: rgb(0, 132, 255);
+.header .Logo a {
+  color: rgb(255, 255, 255);
 }
-.Logo span {
-  color: rgb(255, 123, 0);
+.header .Logo span {
+  color: rgb(0, 72, 188);
 }
-
-nav .lienRoot {
+.header nav #listeLien {
+  padding-right: 104px;
+}
+.header nav #listeLien .lienRoot {
   border-radius: 20px;
   width: 160px;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 132, 255);
+  color: #000 a;
+  color-font-size: 1.2rem;
+  color-color: #000;
 }
-nav .lienRoot a {
-  font-size: 1.2rem;
-}
+
+
 
 /*# sourceMappingURL=style.css.map */

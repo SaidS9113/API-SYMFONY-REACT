@@ -49,7 +49,7 @@ function ListeCategorie() {
   if (error) return <p className="text-center text-red-500">Erreur : {error}</p>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 mt-[100px] text-white">
       <h1 className="text-2xl font-bold text-center mb-6">Liste des catégories</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">

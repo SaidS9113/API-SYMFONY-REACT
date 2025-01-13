@@ -82,7 +82,7 @@ function AjoutProduit() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-6 mt-[100px] text-white">
             <h2 className="text-2xl font-bold mb-4 text-center">Ajouter un Produit</h2>
             {message && <p className="text-center text-sm text-red-500 mb-4">{message}</p>}
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto">
