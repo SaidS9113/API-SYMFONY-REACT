@@ -34,6 +34,7 @@ security:
     - { path: ^/api/add-product, roles: PUBLIC_ACCESS }
     - { path: ^/api/process-payment, roles: PUBLIC_ACCESS }
     - { path: ^/api/contact, roles: PUBLIC_ACCESS }
+    - { path: ^/api/newsletter, roles: PUBLIC_ACCESS }
 
     # Routes accessibles uniquement aux administrateurs
     - { path: ^/api/admin, roles: ROLE_ADMIN }

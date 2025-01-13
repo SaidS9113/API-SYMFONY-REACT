@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import image1 from "../assets/img/porsheProduct.webp";
 import Image2 from "../assets/img/bugattiProduct.jpg";  // Ajoutez ici l'URL de votre deuxième image
-import Image3 from "../assets/img/bmwProduct.jpg";  // Ajoutez ici l'URL de votre troisième image
+import Image3 from "../assets/img/ToyotaProduct.jpg";  // Ajoutez ici l'URL de votre troisième image
 import SectionProduit from "./SectionProduit";
 
 function Accueil() {
