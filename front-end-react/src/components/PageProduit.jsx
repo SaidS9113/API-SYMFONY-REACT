@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api"; // Assurez-vous que l'API est correctement configurée
 import { PanierContext } from "../PanierContext"; // Importez votre contexte
 
@@ -9,6 +9,7 @@ function PageProduit() {
   const [produit, setProduit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Ajout de useNavigate
 
   const fetchProduit = async () => {
     try {
@@ -30,6 +31,11 @@ function PageProduit() {
   if (error) return <p className="text-red-500 text-center">{error}</p>;
   if (!produit) return <p className="text-white text-center">Produit introuvable.</p>;
 
+  const handleAjouterAuPanier = () => {
+    ajouterAuPanier({ ...produit, quantite: 1 });
+    navigate("/panier"); // Redirection vers la page panier
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 bg-[#111111] text-white mt-[100px] pt-[100px] pb-[100px]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -50,7 +56,7 @@ function PageProduit() {
           <p className="text-xl font-bold mb-6">{produit.prix} €</p>
           <button
             className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-            onClick={() => ajouterAuPanier({ ...produit, quantite: 1 })}
+            onClick={handleAjouterAuPanier} // Utilisation de la fonction handle
           >
             Ajouter au panier
           </button>

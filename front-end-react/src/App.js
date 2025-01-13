@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import Accueil from "./components/Accueil";
 import Boutique from "./components/Boutique";
@@ -17,10 +18,11 @@ import ProduitBMW_M5 from "./components/ProduitBMW_M5";
 import ProduitToyota_RAV4 from "./components/ProduitToyota_RAV4";
 import CheckoutForm from "./components/CheckoutForm";
 import SectionProduit from "./components/SectionProduit";
+import Modal from "./components/Modal";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectionRoute";
 import { UserProvider } from "./components/UserContext";
 import { PanierProvider } from "./PanierContext";
@@ -30,87 +32,101 @@ import "./assets/css/style.css";
 
 const stripePromise = loadStripe("pk_test_51QfKrtGYlym3LEYwksBSpsJGVIPXpJEN50Lz8RWCjVuAn0PwoUMEdjiD40TpTPPJ7CrzWKuhP1PmOoy77asvQ7Dv00PddWWT60");
 
+// Composant ScrollToTop pour réinitialiser la position du défilement à chaque changement de route
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Réinitialiser le défilement à 0, 0 à chaque changement de route
+    window.scrollTo(0, 0);
+  }, [location]); // Le hook dépend du changement de location (URL)
+
+  return null;
+}
+
 function App() {
   return (
     <UserProvider>
       <PanierProvider>
-      <Elements stripe={stripePromise}> {/* Fournisseur Stripe */}
-        <Router>
-          <div className="flex flex-col min-h-screen">
-            <header id="header">
-              <Header />
-            </header>
-            
-            <main className="flex-grow">
-              <Routes>
-                {/* Redirection de l'index vers l'accueil */}
-                <Route path="/" element={<Navigate to="/accueil" replace />} />
+        <Elements stripe={stripePromise}> {/* Fournisseur Stripe */}
+          <Router>
+            <div className="flex flex-col min-h-screen">
+              <header id="header">
+                <Header />
+              </header>
 
-                {/* Routes accessibles à tout le monde */}
-                <Route path="/accueil" element={<Accueil />} />
-                <Route path="/boutique" element={<Boutique />} />
-                <Route path="/panier" element={<Panier />} />
-                <Route path="/inscription" element={<Inscription />} />
-                <Route path="/form-auth" element={<FormAuth />} />
-                <Route path="/profil-utilisateur" element={<Profil />} />
-                <Route path="/page-produit/:id" element={<PageProduit />} />
-                <Route path="/produit-bugatti-chiron" element={<ProduitBugattiChiron />} />
-                <Route path="/produit-porche-911" element={<ProduitPorche911 />} />
-                <Route path="/produit-produit-BMW_5" element={<ProduitBMW_M5 />} />
-                <Route path="/produit-toyota-RAV4" element={<ProduitToyota_RAV4 />} />
-                <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
-                <Route path="/" element={<SectionProduit />} />
-                <Route path="/contact" element={<Contact />} />
+              <main className="flex-grow">
+                <ScrollToTop /> {/* Ajouter ScrollToTop ici */}
+                <Routes>
+                  {/* Redirection de l'index vers l'accueil */}
+                  <Route path="/" element={<Navigate to="/accueil" replace />} />
 
-                {/* Routes réservées aux administrateurs */}
-                <Route
-                  path="/liste-vehicule"
-                  element={
-                    <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                      <ListeProduit />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/liste-categorie"
-                  element={
-                    <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                      <ListeCategorie />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/ajout-vehicule-categorie"
-                  element={
-                    <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                      <AjoutProduit />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/ModificationProduit/:id"
-                  element={
-                    <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                      <ModificationProduit />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/ModificationCategorie/:id"
-                  element={
-                    <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                      <ModificationCategorie />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </main>
+                  {/* Routes accessibles à tout le monde */}
+                  <Route path="/accueil" element={<Accueil />} />
+                  <Route path="/boutique" element={<Boutique />} />
+                  <Route path="/panier" element={<Panier />} />
+                  <Route path="/inscription" element={<Inscription />} />
+                  <Route path="/form-auth" element={<FormAuth />} />
+                  <Route path="/profil-utilisateur" element={<Profil />} />
+                  <Route path="/page-produit/:id" element={<PageProduit />} />
+                  <Route path="/produit-bugatti-chiron" element={<ProduitBugattiChiron />} />
+                  <Route path="/produit-porche-911" element={<ProduitPorche911 />} />
+                  <Route path="/produit-produit-BMW_5" element={<ProduitBMW_M5 />} />
+                  <Route path="/produit-toyota-RAV4" element={<ProduitToyota_RAV4 />} />
+                  <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
+                  <Route path="/" element={<SectionProduit />} />
+                  <Route path="/" element={<Modal />} />
+                  <Route path="/contact" element={<Contact />} />
 
-            <footer>
-              <Footer />
-            </footer>
-          </div>
-        </Router>
+                  {/* Routes réservées aux administrateurs */}
+                  <Route
+                    path="/liste-vehicule"
+                    element={
+                      <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                        <ListeProduit />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/liste-categorie"
+                    element={
+                      <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                        <ListeCategorie />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/ajout-vehicule-categorie"
+                    element={
+                      <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                        <AjoutProduit />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/ModificationProduit/:id"
+                    element={
+                      <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                        <ModificationProduit />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/ModificationCategorie/:id"
+                    element={
+                      <ProtectedRoute roles={["ROLE_ADMIN"]}>
+                        <ModificationCategorie />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </main>
+
+              <footer>
+                <Footer />
+              </footer>
+            </div>
+          </Router>
         </Elements>
       </PanierProvider>
     </UserProvider>
