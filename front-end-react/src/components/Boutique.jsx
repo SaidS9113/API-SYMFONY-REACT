@@ -100,7 +100,7 @@ function Boutique() {
   }, [page]);
 
   return (
-    <div className="p-4 mt-[100px] bg-gray-800 text-white">
+    <div className="p-[50px] bg-[#111111] text-white mt-[100px]">
       <h1 className="text-4xl font-bold mb-10 text-center">Boutique</h1>
       {error && (
         <p className="text-center text-red-500 mb-4">{error}</p>
@@ -109,7 +109,7 @@ function Boutique() {
         {produits.map((produit) => (
           <div
             key={produit.id}
-            className="border border-white rounded-lg shadow p-4 flex flex-col items-center bg-gray-900"
+            className="border border-white rounded-lg shadow p-4 flex flex-col items-center bg-[#111111]"
           >
             <Link to={produit.redirection_url} className="w-full">
               <img
