@@ -7,8 +7,8 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/doctrine-orm": "^4.0.13",
-        "api-platform/symfony": "^4.0.13",
+        "api-platform/doctrine-orm": "^4.0.14",
+        "api-platform/symfony": "^4.0.14",
         "doctrine/dbal": "^3.9.3",
         "doctrine/doctrine-bundle": "^2.13.1",
         "doctrine/doctrine-migrations-bundle": ">=3.3.1",
@@ -91,7 +91,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": ">=11.5.1",
-        "symfony/maker-bundle": ">=1.61",
+        "symfony/maker-bundle": ">=1.62",
         "symfony/phpunit-bridge": "^7.2"
     }
 }
