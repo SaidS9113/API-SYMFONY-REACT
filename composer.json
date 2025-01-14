@@ -7,8 +7,11 @@
         "php": ">=8.2.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
+<<<<<<< HEAD
         "ext-curl": "*",
         "ext-mbstring": "*",
+=======
+>>>>>>> 691e3ce175238d2f743cc006eab48ea2183bf823
         "api-platform/doctrine-orm": "^4.0.14",
         "api-platform/symfony": "^4.0.14",
         "doctrine/dbal": "^3.9.3",
