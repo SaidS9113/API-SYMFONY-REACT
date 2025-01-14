@@ -32,7 +32,7 @@ function Footer() {
     return (
         <footer className="bg-[#111111] text-white py-10 bt border-t-[2.5px] border-t-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="flex flex-col md:flex-row justify-between items-center pt-[20px]">
                     {/* Section Links */}
                     <div className="w-full md:w-1/3 mb-6 md:mb-0">
                         <h2 className="text-lg font-semibold mb-4 text-center md:text-left">Liens rapides</h2>
