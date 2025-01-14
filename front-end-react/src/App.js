@@ -18,7 +18,9 @@ import ProduitBMW_M5 from "./components/ProduitBMW_M5";
 import ProduitToyota_RAV4 from "./components/ProduitToyota_RAV4";
 import CheckoutForm from "./components/CheckoutForm";
 import SectionProduit from "./components/SectionProduit";
-import SectionProgressionVitesse from "./components/SectionProgressionVitesse.jsx";
+import SectionProgressionVitesse from "./components/SectionProgressionVitesse";
+import SectionMarque from "./components/SectionMarque";
+import SectionVideo from "./components/SectionVideo";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -76,6 +78,8 @@ function App() {
                   <Route path="/formulaire-paiement-stripe" element={<CheckoutForm />} />
                   <Route path="/" element={<SectionProduit />} />
                   <Route path="/" element={<SectionProgressionVitesse />} />
+                  <Route path="/" element={<SectionMarque />} />
+                  <Route path="/" element={<SectionVideo />} />
                   <Route path="/contact" element={<Contact />} />
 
                   {/* Routes réservées aux administrateurs */}

@@ -1,29 +1,29 @@
-import { useContext } from "react";
-import { PanierContext } from "../PanierContext";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PanierContext } from '../PanierContext';
 
 function Panier() {
   const panierContext = useContext(PanierContext);
   const navigate = useNavigate();
-  const BASE_URL = "http://localhost:8000";
+  const BASE_URL = 'http://localhost:8000';
 
   if (!panierContext) {
-    throw new Error("Panier must be used within a PanierProvider");
+    throw new Error('Panier must be used within a PanierProvider');
   }
 
   const { panier, setPanier } = panierContext;
 
   const getImageUrl = (item) => {
     if (item.imageUrl) {
-      if (item.imageUrl.startsWith("/uploads")) {
+      if (item.imageUrl.startsWith('/uploads')) {
         return `${BASE_URL}${item.imageUrl}`;
       }
       return item.imageUrl;
     }
-    const localPanier = JSON.parse(localStorage.getItem("panier")) || [];
+    const localPanier = JSON.parse(localStorage.getItem('panier') || '[]');
     const localItem = localPanier.find((p) => p.id === item.id);
-    const imageUrl = localItem?.imageUrl || "/default-image.jpg";
-    if (imageUrl.startsWith("/uploads")) {
+    const imageUrl = localItem?.imageUrl || '/default-image.jpg';
+    if (imageUrl.startsWith('/uploads')) {
       return `${BASE_URL}${imageUrl}`;
     }
     return imageUrl;
@@ -38,13 +38,13 @@ function Panier() {
       return item;
     });
     setPanier(nouveauPanier);
-    localStorage.setItem("panier", JSON.stringify(nouveauPanier));
+    localStorage.setItem('panier', JSON.stringify(nouveauPanier));
   };
 
   const supprimerProduit = (id) => {
     const nouveauPanier = panier.filter((item) => item.id !== id);
     setPanier(nouveauPanier);
-    localStorage.setItem("panier", JSON.stringify(nouveauPanier));
+    localStorage.setItem('panier', JSON.stringify(nouveauPanier));
   };
 
   const calculerSousTotal = () => {
@@ -52,12 +52,15 @@ function Panier() {
   };
 
   const procederAuPaiement = () => {
-    navigate("/formulaire-paiement-stripe");
+    navigate('/formulaire-paiement-stripe');
   };
+
+  // Vérification de la condition des 3 produits distincts
+  const panierA3ProduitsDistints = panier.length >= 3;
 
   return (
     <div className="min-h-screen bg-[#111111] text-white flex flex-col mt-[100px]">
-      <div className="bg-[#111111] shadow-md py-4 sticky top-0 z-10 border-t-[2px] border-b-[2px]">
+      <div className="bg-[#111111] shadow-md py-4 sticky top-[100px] z-10 border-t-[2px] border-b-[2px]">
         <h1 className="text-2xl font-bold text-white text-center">Votre Panier</h1>
       </div>
 
@@ -65,7 +68,7 @@ function Panier() {
         <div className="w-[95%]">
           {panier.length > 0 ? (
             <>
-              {/* Affichage sous forme de carte pour mobile */}
+              {/* Affichage mobile */}
               <div className="block md:hidden">
                 {panier.map((item) => (
                   <div key={item.id} className="bg-gray-700 shadow-md rounded-lg p-4 mb-4">
@@ -106,9 +109,9 @@ function Panier() {
                 ))}
               </div>
 
-              {/* Affichage sous forme de tableau pour tablette et PC */}
+              {/* Affichage tablette/desktop */}
               <div className="hidden md:block bg-gray-700 shadow-md rounded-lg overflow-hidden">
-                <div className="overflow-x-auto max-h-[calc(100vh-250px)] overflow-y-auto">
+                <div className={`overflow-x-auto ${!panierA3ProduitsDistints ? 'max-h-[calc(100vh-250px)] overflow-y-hidden' : 'max-h-[calc(100vh-250px)] overflow-y-auto'}`}>
                   <table className="min-w-full divide-y divide-gray-600">
                     <thead className="bg-gray-800">
                       <tr>

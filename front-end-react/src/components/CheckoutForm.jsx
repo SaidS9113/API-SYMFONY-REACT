@@ -116,8 +116,8 @@ function CheckoutForm() {
   };
 
   return (
-    <div className="mt-[100px] text-white pt-[50px] pb-[200px]">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center text-white">Paiement</h1>
+    <div className="mt-[100px] text-white pt-[50px] pb-[200px] mr-[10px] ml-[10px]">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center text-white">Paiement Stripe</h1>
       <div className="w-full max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg flex flex-col lg:flex-row gap-5">
         
         {/* Section des informations du produit */}

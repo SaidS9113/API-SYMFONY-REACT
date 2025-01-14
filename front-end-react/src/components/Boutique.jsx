@@ -13,8 +13,8 @@ function Boutique() {
     {
       id: 1,
       nom: "Bugatti Chiron Super Sport 300+",
-      description: "Hypercar de luxe ultra-puissante.",
-      prix: 4000001,
+      description: "Hypercar de luxe et ultra-puissante.",
+      prix: 4000000,
       image_url: bugattiImage,
       redirection_url: "/produit-bugatti-chiron", // URL fixe pour ce produit
     },
@@ -22,7 +22,7 @@ function Boutique() {
       id: 2,
       nom: "Porsche 911 Turbo S",
       description: "Voiture sportive, performante et élégante.",
-      prix: 300001,
+      prix: 300000,
       image_url: porscheImage,
       redirection_url: "/produit-porche-911", // URL fixe pour ce produit
     },
@@ -30,7 +30,7 @@ function Boutique() {
       id: 3,
       nom: "BMW M5 Competition",
       description: "Berline sportive avec 625 chevaux.",
-      prix: 150001,
+      prix: 150000,
       image_url: bmwImage,
       redirection_url: "/produit-produit-BMW_5", // URL fixe pour ce produit
     },
@@ -38,7 +38,7 @@ function Boutique() {
       id: 4,
       nom: "Toyota RAV4 Hybrid",
       description: "SUV hybride polyvalent et économique.",
-      prix: 40001,
+      prix: 40000,
       image_url: toyotaImage,
       redirection_url: "/produit-toyota-RAV4", // URL fixe pour ce produit
     },
@@ -100,7 +100,7 @@ function Boutique() {
   }, [page]);
 
   return (
-    <div className="p-[50px] bg-[#111111] text-white mt-[100px]">
+    <div className="pb-[40px] pt-[40px] bg-[#111111] text-white mt-[100px]">
       <h1 className="text-4xl font-bold mb-10 text-center">Boutique</h1>
       {error && (
         <p className="text-center text-red-500 mb-4">{error}</p>

@@ -7,6 +7,19 @@ body {
   background-color: #111111;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 .header {
   top: 0;
   z-index: 200;

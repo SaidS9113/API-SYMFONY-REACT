@@ -1,71 +1,93 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 function SectionProgressionVitesse() {
-    const [percentages, setPercentages] = useState([50, 85, 100, 100]); // Pourcentages de progression
-
-    // Simule l'augmentation des pourcentages lors du défilement
-    useEffect(() => {
-        const handleScroll = () => {
-            setPercentages((prev) =>
-                prev.map((value) => (value < 100 ? value + 1 : value)) // Limite la progression à 100%
-            );
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    // Fonction pour calculer la couleur en fonction de la vitesse
-    const getColor = (car) => {
-        const minSpeed = Math.min(...carData.map(c => c.speed));
-        const maxSpeed = Math.max(...carData.map(c => c.speed));
-
-        if (car.speed === minSpeed) return "text-green-500 border-green-500";
-        if (car.speed === maxSpeed) return "text-red-500 border-red-500";
-        return "text-orange-500 border-orange-500";
-    };
-
-    // Données des voitures
+    const [progress, setProgress] = useState({});
+    const sectionRef = useRef(null); // Référence à la section
     const carData = [
-        { name: "Bugatti", speed: 420, percentage: percentages[0] }, // La plus rapide
-        { name: "Porsche", speed: 308, percentage: percentages[1] }, // Vitesse normale
-        { name: "BMW", speed: 250, percentage: percentages[2] }, // Vitesse normale
-        { name: "Toyota", speed: 100, percentage: percentages[3] }, // La plus lente
+        { name: "Bugatti", speed: 420 },
+        { name: "Porsche", speed: 308 },
+        { name: "BMW", speed: 250 },
+        { name: "Toyota", speed: 100 },
     ];
 
-    return (
-        <div className="bg-[#111111] min-h-screen flex flex-col justify-center items-center text-white py-10">
-            <h2 className="text-4xl font-bold mb-10 text-center">Vitesse des véhicules</h2>
-            <div className="w-full sm:w-full lg:w-[80%] flex flex-wrap justify-center gap-8"> {/* Conteneur centré avec flex */}
-                {carData.map((car, index) => {
-                    // Déterminer la progression en fonction de la vitesse
-                    let progressPercentage;
-                    if (car.speed === 100) {
-                        progressPercentage = 50; // La voiture la plus lente (Toyota) est remplie à 50%
-                    } else if (car.speed === 420) {
-                        progressPercentage = 100; // La voiture la plus rapide (Bugatti) est remplie à 100%
-                    } else {
-                        progressPercentage = 85; // Les autres voitures sont remplies à 85%
-                    }
+    // Fonction pour interpoler la couleur entre vert et rouge selon la vitesse
+    const interpolateColor = (percentage) => {
+        const green = Math.min(255, (1 - percentage / 100) * 255);
+        const red = Math.min(255, (percentage / 100) * 255);
+        return `rgb(${red}, ${green}, 0)`; // Couleur entre vert et rouge
+    };
 
+    // Observer pour détecter quand la section devient visible
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    // Démarrer l'animation lorsque la section est visible
+                    const maxSpeed = Math.max(...carData.map(c => c.speed));
+                    carData.forEach(car => {
+                        const percentage = (car.speed / maxSpeed) * 100;
+                        setProgress(prev => ({ ...prev, [car.name]: 0 }));
+
+                        setTimeout(() => {
+                            setProgress(prev => ({ ...prev, [car.name]: percentage }));
+                        }, 100);
+                    });
+                }
+            },
+            { threshold: 0.5 } // Déclencher l'animation lorsque 50% de la section est visible
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
+    return (
+        <div ref={sectionRef} className="bg-[#111111] flex flex-col items-center text-white py-5 pt-[100px]">
+            <h2 className="text-4xl font-bold mb-8 text-center pr-[20px] pl-[20px]">
+                Vitesse des véhicules
+            </h2>
+            <div className="w-full max-w-[1200px] flex flex-wrap justify-center gap-[70px] pt-[40px]">
+                {carData.map((car, index) => {
+                    const progressPercentage = progress[car.name] || 0;
+                    const color = interpolateColor(progressPercentage);
+                    
                     return (
-                        <div
-                            key={index}
-                            className={`flex flex-col items-center justify-center w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full border-8 ${getColor(
-                                car
-                            )} transition-all duration-500`}
-                            style={{
-                                // Progrès de la couleur du cercle selon la progression en degrés
-                                background: `conic-gradient(${getColor(
-                                    car
-                                ).split(" ")[0]} ${progressPercentage * 3.6}deg, #222 ${progressPercentage * 3.6}deg)`, // Gradient de la progression
-                            }}
-                        >
-                            <div className="text-center">
-                                <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold">{car.speed} km/h</p>
-                            </div>
-                            <div className="mt-2 text-center">
-                                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold">{car.name}</p>
+                        <div key={index} className="relative">
+                            <svg className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 -rotate-90">
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r="45%"
+                                    fill="none"
+                                    stroke="#222"
+                                    strokeWidth="8"
+                                    className="transform"
+                                />
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r="45%"
+                                    fill="none"
+                                    stroke={color} // Appliquer la couleur dynamique
+                                    strokeWidth="8"
+                                    strokeDasharray={`calc(${progressPercentage * 2.827}px) 1000`} // Progrès circulaire
+                                    className="transform transition-all duration-[3000ms] ease-out" // Ralentir l'animation
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                <p className="text-xl sm:text-2xl md:text-3xl font-bold">
+                                    {car.speed} km/h
+                                </p>
+                                <p className="mt-2 text-base sm:text-lg md:text-xl font-semibold">
+                                    {car.name}
+                                </p>
                             </div>
                         </div>
                     );

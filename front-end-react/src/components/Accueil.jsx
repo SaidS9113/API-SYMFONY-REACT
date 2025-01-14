@@ -5,6 +5,8 @@ import Image2 from "../assets/img/bugattiProduct.jpg";  // Ajoutez ici l'URL de 
 import Image3 from "../assets/img/ToyotaProduct.jpg";  // Ajoutez ici l'URL de votre troisième image
 import SectionProduit from "./SectionProduit";
 import SectionProgressionVitesse from "./SectionProgressionVitesse";
+import SectionMarque from "./SectionMarque";
+import SectionVideo from "./SectionVideo";
 
 function Accueil() {
     // État pour l'image du carrousel
@@ -40,6 +42,8 @@ function Accueil() {
             </div>
             <SectionProduit />
             <SectionProgressionVitesse />
+            <SectionMarque />
+            <SectionVideo />
         </div>
     );
 }
