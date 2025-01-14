@@ -10,7 +10,7 @@ function Panier() {
   if (!panierContext) {
     throw new Error('Panier must be used within a PanierProvider');
   }
-
+  
   const { panier, setPanier } = panierContext;
 
   const getImageUrl = (item) => {
