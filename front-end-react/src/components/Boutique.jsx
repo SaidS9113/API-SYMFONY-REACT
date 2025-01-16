@@ -63,7 +63,7 @@ function Boutique() {
   const fetchProduits = async (page) => {
     try {
       setLoading(true); // Démarre le chargement
-      const response = await api.get(`/product?page=${page}&limit=10`);
+      const response = await api.get(`/api/product?page=${page}&limit=10`);
       const newProducts = response.data;
 
       if (newProducts.length === 0) {

@@ -23,7 +23,7 @@ api.interceptors.request.use(
     if (process.env.NODE_ENV === "development") {
       console.log("Requête envoyée:", config);
     }
-
+    console.log("aaaaaaaaaaa:", config);
     return config; // Retourne la configuration modifiée
   },
   (error) => {
@@ -40,7 +40,7 @@ api.interceptors.response.use(
     if (process.env.NODE_ENV === "development") {
       console.log("Réponse reçue:", response);
     }
-
+    console.log("bbbbbbbbb:", response);
     return response; // Retourne la réponse en cas de succès
   },
   (error) => {
