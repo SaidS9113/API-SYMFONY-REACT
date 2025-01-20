@@ -2,99 +2,131 @@
 
 namespace App\Controller;
 
+use App\Entity\Produit;
+use Stripe\Exception\ApiErrorException;
+use Stripe\StripeClient;
+use Stripe\Checkout\Session;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use App\Entity\Produit;
 
-class StripeController
+class StripeController extends AbstractController
 {
-    private $em;
-    private $logger;
+    private ?StripeClient $stripe = null;
 
-    public function __construct(EntityManagerInterface $em, LoggerInterface $logger)
-    {
-        $this->em = $em;
-        $this->logger = $logger;
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+    public function __construct(
+        private readonly string $stripeSecretKey,
+        private readonly string $successUrl,
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager
+    ) {
     }
 
-    #[Route('/api/process-payment', methods: ['POST'])]
-    public function processPayment(Request $request): JsonResponse
+    /**
+     * Crée une session de paiement Stripe
+     *
+     * @param Request $request Requête contenant les données du panier
+     * @return JsonResponse
+     *
+     * @throws BadRequestHttpException Si le panier est vide ou invalide
+     */
+    #[Route('/api/stripe/checkout-session', name: 'create_checkout_session', methods: ['POST'])]
+    public function createCheckoutSession(Request $request): JsonResponse
     {
         try {
-            // Récupérer et décoder les données JSON
-            $content = json_decode($request->getContent(), true);
-            $this->logger->info('Données reçues:', ['content' => $content]);
+            $data = json_decode($request->getContent(), true);
 
-            if (!isset($content['items']) || !isset($content['amount'])) {
-                throw new \Exception('Données de paiement manquantes');
+            if (!isset($data['items']) || !is_array($data['items'])) {
+                throw new BadRequestHttpException('Les éléments du panier sont requis.');
             }
 
-            $items = $content['items'];
-            $clientAmount = (int)$content['amount'];
-
-            // Calculer le montant total côté serveur
-            $serverAmount = 0;
-            foreach ($items as $item) {
-                if (!isset($item['id'], $item['prix'], $item['quantite'])) {
-                    throw new \Exception('Données d\'article invalides');
+            // Récupération et validation des éléments du panier
+            $cartItems = array_map(function ($item) {
+                if (!isset($item['productId'], $item['quantity'])) {
+                    throw new BadRequestHttpException('Chaque élément du panier doit contenir un productId et une quantité.');
                 }
 
-                // Vérifier que le produit existe
-                $product = $this->em->getRepository(Produit::class)->find($item['id']);
+                $product = $this->entityManager->getRepository(Produit::class)->find($item['productId']);
+
                 if (!$product) {
-                    throw new \Exception('Produit non trouvé: ' . $item['id']);
+                    throw new BadRequestHttpException("Produit avec l'ID {$item['productId']} introuvable.");
                 }
 
-                // Convertir et normaliser les valeurs numériques
-                $prix = (float)number_format((float)$item['prix'], 2, '.', '');
-                $quantite = (int)$item['quantite'];
+                // Validation du prix du produit
+                if ($product->getPrix() <= 0) {
+                    throw new BadRequestHttpException("Le produit {$product->getNom()} doit avoir un prix valide.");
+                }
 
-                // Calculer le sous-total pour cet article
-                $itemTotal = $prix * $quantite;
-                $serverAmount += $itemTotal;
-            }
+                return [
+                    'product' => $product,
+                    'quantity' => $item['quantity'],
+                ];
+            }, $data['items']);
 
-            // Convertir le montant total en centimes
-            $serverAmount = (int)round($serverAmount * 100);
+            // Création des lignes de paiement
+            $lineItems = array_map(function ($item) {
+                $product = $item['product'];
+                
+                return [
+                    'price_data' => [
+                        'currency' => 'EUR', // Devise utilisée
+                        'unit_amount' => $product->getPrix() * 100, // Conversion du prix en centimes
+                        'product_data' => [
+                            'name' => $product->getNom(),
+                            'description' => $product->getDescription(),
+                        ],
+                    ],
+                    'quantity' => $item['quantity'], // Quantité
+                ];
+            }, $cartItems);
 
-            $this->logger->info('Comparaison des montants:', [
-                'clientAmount' => $clientAmount,
-                'serverAmount' => $serverAmount
+            // Création de la session de paiement avec Stripe
+            $session = $this->getStripe()->checkout->sessions->create([
+                'line_items' => $lineItems,
+                'mode' => 'payment', // Mode de paiement
+                'success_url' => $this->successUrl, // URL de succès
+                'cancel_url' => $this->successUrl . '?canceled=true', // URL d'annulation
             ]);
 
-            // Vérifier que les montants correspondent
-            if ($serverAmount !== $clientAmount) {
-                throw new \Exception('Le montant total ne correspond pas');
-            }
-
-            // Créer le PaymentIntent
-            $intent = PaymentIntent::create([
-                'amount' => $serverAmount,
-                'currency' => 'eur',
-                'payment_method_types' => ['card'],
-                'confirmation_method' => 'manual',
+            $this->logger->info('Session de paiement Stripe créée avec succès', [
+                'session_id' => $session->id
             ]);
 
-            return new JsonResponse([
-                'success' => true,
-                'clientSecret' => $intent->client_secret
+            return $this->json([
+                'url' => $session->url,
+                'session_id' => $session->id
             ]);
+        } catch (ApiErrorException $e) {
+            $this->logger->error('Erreur Stripe lors de la création de la session', [
+                'error' => $e->getMessage()
+            ]);
+
+            return $this->json([
+                'error' => 'Une erreur est survenue lors de la création de la session de paiement'
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
 
         } catch (\Exception $e) {
-            $this->logger->error('Erreur de paiement:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+            $this->logger->error('Erreur inattendue', [
+                'error' => $e->getMessage()
             ]);
 
-            return new JsonResponse([
-                'error' => $e->getMessage()
-            ], 400);
+            return $this->json([
+                'error' => 'Une erreur inattendue est survenue'
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Obtient ou initialise le client Stripe
+     *
+     * @return StripeClient
+     */
+    private function getStripe(): StripeClient
+    {
+        return $this->stripe ??= new StripeClient($this->stripeSecretKey);
     }
 }

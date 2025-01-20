@@ -2,9 +2,11 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 # Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads/products'
+    stripe.secret_key: '%env(STRIPE_SECRET_KEY)%'
+    stripe.success_url: '%env(STRIPE_SUCCESS_URL)%'
+    stripe.cancel_url: '%env(STRIPE_CANCEL_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -20,9 +22,15 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-# Register controllers as services with the `controller.service_arguments` tag
+            
+    # Register controllers as services with the `controller.service_arguments` tag
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+
+    # Configure the StripeController explicitly
+    App\Controller\StripeController:
+        arguments:
+            $stripeSecretKey: '%stripe.secret_key%'
+            $successUrl: '%stripe.success_url%'
+            $cancelUrl: '%stripe.cancel_url%'
